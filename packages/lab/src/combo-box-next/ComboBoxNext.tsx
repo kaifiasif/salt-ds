@@ -13,13 +13,12 @@ import {
 import {
   Input,
   makePrefixer,
-  SaltProvider,
   useForkRef,
   useId,
   InputProps,
+  useFloatingComponent,
 } from "@salt-ds/core";
 import { ListNext, ListNextProps } from "../list-next";
-import { FloatingPortal } from "@floating-ui/react";
 import { useComboBox } from "./useComboBox";
 import { useWindow } from "@salt-ds/window";
 import { useComponentCssInjection } from "@salt-ds/styles";
@@ -48,7 +47,7 @@ export interface ComboBoxNextProps<T>
   /**
    * If `true`, the component will be disabled.
    */
-  disabled: boolean;
+  disabled?: boolean;
   /* Highlighted index for when the list is controlled. */
   highlightedItem?: string;
   /* Selected value for when the list is controlled. */
@@ -176,11 +175,14 @@ export const ComboBoxNext = forwardRef(function ComboBoxNext<T>(
     reference,
     getTriggerProps,
     getPortalProps,
+    getPosition,
   } = portalProps;
 
   // floating references
   const triggerRef = useForkRef(ref, reference);
   const inputRef = useForkRef(triggerRef, focusVisibleRef);
+
+  const { Component: FloatingComponent } = useFloatingComponent();
 
   const getFilteredSource = () => {
     if (!source) return null;
@@ -238,34 +240,33 @@ export const ComboBoxNext = forwardRef(function ComboBoxNext<T>(
         {...getTriggerProps()}
         {...restInputProps}
       />
-      {open && filteredSource && (
-        <FloatingPortal>
-          {/* The provider is needed to support the use case where an app has nested modes. The portal element needs to have the same style as the current scope */}
-          <SaltProvider>
-            <div ref={floating} {...getPortalProps()}>
-              <ListNext
-                className={clsx(withBaseName("list"), listClassName)}
-                disableFocus
-                highlightedItem={highlightedItem}
-                onMouseOver={mouseOverHandler}
-                selected={selectedItem}
-                {...restListProps}
-                ref={setListRef}
-              >
-                {filteredSource.map((value, index) => {
-                  return (
-                    itemRenderer &&
-                    itemRenderer(index, value, inputValue, (event) => {
-                      setSelectedItem(event.currentTarget?.dataset.value);
-                      setInputValue(event.currentTarget?.dataset.value);
-                    })
-                  );
-                })}
-              </ListNext>
-            </div>
-          </SaltProvider>
-        </FloatingPortal>
-      )}
+
+      <FloatingComponent
+        open={Boolean(open && filteredSource)}
+        ref={floating}
+        {...getPortalProps()}
+        {...getPosition()}
+      >
+        <ListNext
+          className={clsx(withBaseName("list"), listClassName)}
+          disableFocus
+          highlightedItem={highlightedItem}
+          onMouseOver={mouseOverHandler}
+          selected={selectedItem}
+          {...restListProps}
+          ref={setListRef}
+        >
+          {filteredSource?.map((value, index) => {
+            return (
+              itemRenderer &&
+              itemRenderer(index, value, inputValue, (event) => {
+                setSelectedItem(event.currentTarget?.dataset.value);
+                setInputValue(event.currentTarget?.dataset.value);
+              })
+            );
+          })}
+        </ListNext>
+      </FloatingComponent>
     </>
   );
 });

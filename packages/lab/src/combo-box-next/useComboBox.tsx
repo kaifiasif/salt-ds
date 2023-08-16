@@ -31,6 +31,7 @@ export const useComboBox = ({
     reference,
     getPortalProps,
     getTriggerProps,
+    getPosition,
   } = useComboboxPortal(PortalProps);
 
   const {
@@ -132,6 +133,7 @@ export const useComboBox = ({
       reference,
       getTriggerProps,
       getPortalProps,
+      getPosition,
     },
     // list
     inputValue,
