@@ -199,12 +199,17 @@ export function useFloatingUI(
     animationFrame,
   } = useFloatingPlatform();
 
+  const handleOpenChange = (open: boolean) => {
+    update();
+    onOpenChange?.(open);
+  };
+
   const { reference, floating, refs, update, ...rest } = useFloating({
     placement,
     strategy,
     middleware: contextMiddleware(middleware),
     open,
-    onOpenChange,
+    onOpenChange: handleOpenChange,
     whileElementsMounted: (...args) => {
       const cleanup = autoUpdate(...args, { animationFrame });
 
