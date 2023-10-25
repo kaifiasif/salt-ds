@@ -7,7 +7,7 @@
 }
 
 .saltCheckbox-label {
-  margin-top: -1px
+  margin-top: calc(-1 * var(--salt-spacing-10));
 }
 
 /* Styles applied to root component if `disabled={true}` */
