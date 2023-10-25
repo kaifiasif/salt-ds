@@ -6,6 +6,10 @@
   position: relative;
 }
 
+.saltRadioButton-label {
+  margin-top: -1px
+}
+
 /* Styles applied when RadioButton is disabled */
 .saltRadioButton-disabled {
   color: var(--salt-text-primary-foreground-disabled);

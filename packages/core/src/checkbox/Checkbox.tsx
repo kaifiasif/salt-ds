@@ -213,7 +213,7 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(
           validationStatus={validationStatus}
           error={error}
         />
-        {label}
+        <span className={withBaseName("label")}>{label}</span>
       </label>
     );
   }

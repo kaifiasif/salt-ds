@@ -198,7 +198,7 @@ export const RadioButton = forwardRef<HTMLLabelElement, RadioButtonProps>(
           validationStatus={validationStatus}
           error={error}
         />
-        {label}
+        <span className={withBaseName("label")}>{label}</span>
       </label>
     );
   }
