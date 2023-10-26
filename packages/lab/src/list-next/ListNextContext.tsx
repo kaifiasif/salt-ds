@@ -1,20 +1,19 @@
 import { createContext } from "@salt-ds/core";
 import { SyntheticEvent, useContext } from "react";
+import { ListItemNextType } from "./useList";
 
-export interface ListNextContextValue {
+export interface ListNextContextValue<Item extends ListItemNextType> {
   disabled?: boolean;
-  id?: string;
-  select: (event: SyntheticEvent<HTMLLIElement>) => void;
-  isSelected: (value: string) => boolean;
-  isFocused: (value: string) => boolean;
-  highlight: (event: SyntheticEvent<HTMLLIElement>) => void;
-  isHighlighted: (value: string) => boolean;
+  select: (event: SyntheticEvent<HTMLLIElement>, item: Item) => void;
+  highlight: (event: SyntheticEvent<HTMLLIElement>, item: Item) => void;
+
+  /** Item value getter */
+  getItemValue: (item: Item) => string;
 }
 
-export const ListNextContext = createContext<ListNextContextValue | undefined>(
-  "ListNextContext",
-  undefined
-);
+export const ListNextContext = createContext<
+  ListNextContextValue<ListItemNextType> | undefined
+>("ListNextContext", undefined);
 
 export function useListItem() {
   return useContext(ListNextContext);

@@ -29,9 +29,7 @@ const defaultCollectionOptions = {};
 export const useCollectionItems = <Item>({
   children,
   id: idRoot,
-  label = "",
   options = defaultCollectionOptions,
-  // revealSelected = false,
   source,
 }: CollectionHookProps<Item>): CollectionHookResult<Item> => {
   const { getItemId } = options;

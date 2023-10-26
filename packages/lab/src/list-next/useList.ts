@@ -1,64 +1,106 @@
+import { useControlled, useId, useIsFocusVisible } from "@salt-ds/core";
 import {
   FocusEvent,
   KeyboardEvent,
-  RefObject,
   SyntheticEvent,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from "react";
-import { useControlled, useIsFocusVisible } from "@salt-ds/core";
 
-export interface UseListProps {
+export type ListItemNextType =
+  | string
+  | {
+      value: string;
+      disabled?: boolean;
+    };
+
+const defaultItemDisabledPredicate = <Item extends ListItemNextType>(
+  value: Item
+) => {
+  if (typeof value === "string") {
+    return false;
+  } else {
+    return Boolean(value.disabled);
+  }
+};
+
+const defaultGetItemValue = (item: ListItemNextType): string => {
+  if (typeof item === "string") {
+    return item;
+  }
+  if (Object.prototype.hasOwnProperty.call(item, "value")) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+    return String((item as any).value);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
+  return (item as any).toString();
+};
+
+export interface UseListProps<Item extends ListItemNextType> {
+  /** Data source used. It should be an array of objects or strings. */
+  source: Item[];
   /**
    * If true, all items in list will be disabled.
    */
   disabled?: boolean;
-  /* Highlighted index for when the list is controlled. */
-  highlightedItem?: string;
-  /* Selected value for when the list is controlled. */
-  selected?: string;
-  /* Initial selected value for when the list is controlled. */
-  defaultSelected?: string;
+  /* Highlighted index for when the list is controlled. Set to `null` to highlight nothing. */
+  highlightedIndex?: number | null;
+  /* Initial highlighted index when the list is uncontrolled. */
+  defaultHighlightedIndex?: number;
+  /* Selected item for when the list is controlled. Set to `null` to deselect. */
+  selectedItem?: Item | null;
+  /* Initial selected value when the list is uncontrolled. */
+  defaultSelectedItem?: Item;
   /* Callback for change event. This is called when the selected value changes */
-  onChange?: (e: SyntheticEvent, data: { value: string | undefined }) => void;
+  onChange?: (e: SyntheticEvent, data: Item) => void;
   /* Callback for select event. This is called when any selection occurs, even if a previously selected value is selected again. */
-  onSelect?: (e: SyntheticEvent, data: { value: string }) => void;
+  onSelect?: (e: SyntheticEvent, data: Item) => void;
   /* List id. */
   id?: string;
-  /* List ref. */
-  ref: RefObject<HTMLUListElement>;
+  /** Item value getter */
+  getItemValue?: (item: Item) => string;
+  /** Get item id from its index */
+  getItemId?: (item: Item, index: number) => string;
+
+  itemDisabled?: (item: Item) => boolean;
 }
 
-export const useList = ({
-  disabled = false,
-  highlightedItem: highlightedItemProp,
-  selected: selectedProp,
-  defaultSelected,
-  onChange,
-  onSelect,
-  id,
-  ref,
-}: UseListProps) => {
-  const getOptions: () => HTMLElement[] = useCallback(() => {
-    return Array.from(
-      ref.current?.querySelectorAll('[role="option"]:not([aria-disabled])') ??
-        []
-    );
-  }, [ref]);
+export const useList = <Item extends ListItemNextType>(
+  props: UseListProps<Item>
+) => {
+  const generatedId = useId(props.id);
+
+  const {
+    source,
+    disabled = false,
+    highlightedIndex: highlightedIndexProp,
+    defaultHighlightedIndex,
+    selectedItem: selectedProp,
+    defaultSelectedItem: defaultSelected,
+    onChange,
+    onSelect,
+    id = generatedId,
+    getItemId = (_, index) => `${id}-item-${index}`,
+    getItemValue = defaultGetItemValue,
+    itemDisabled = defaultItemDisabledPredicate,
+  } = props;
 
   const [focusVisible, setFocusVisible] = useState(false);
-  const [activeDescendant, setActiveDescendant] = useState<string | undefined>(
-    undefined
-  );
 
-  const [highlightedItem, setHighlightedItem] = useControlled({
-    controlled: highlightedItemProp,
-    default: undefined,
+  const [highlightedIndex, setHighlightedIndex] = useControlled({
+    controlled: highlightedIndexProp,
+    default: defaultHighlightedIndex,
     name: "ListNext",
-    state: "highlighted",
+    state: "highlightedIndex",
   });
+
+  /** Id of the highlighted item */
+  const activeDescendant =
+    highlightedIndex === undefined || highlightedIndex === null
+      ? undefined
+      : getItemId(source[highlightedIndex], highlightedIndex);
 
   const [selectedItem, setSelectedItem] = useControlled({
     controlled: selectedProp,
@@ -67,153 +109,59 @@ export const useList = ({
     state: "selected",
   });
 
+  const getItemIndex = useCallback(
+    (item: Item) => source.indexOf(item),
+    [source]
+  );
+
+  const getItemAtIndex: (index: number | null | undefined) => Item | undefined =
+    useCallback(
+      (index) =>
+        index === null || index === undefined ? undefined : source[index],
+      [source]
+    );
+
   const {
     isFocusVisibleRef,
     onFocus: handleFocusVisible,
     onBlur: handleBlurVisible,
     ref: focusVisibleRef,
-  } = useIsFocusVisible();
-
-  const updateScroll = useCallback(
-    (currentTarget: Element) => {
-      const list = ref.current;
-      if (!list || !currentTarget) return;
-      const { offsetTop, offsetHeight } = currentTarget as HTMLLIElement;
-      const listHeight = list?.clientHeight;
-      const listScrollTop = list?.scrollTop;
-      if (offsetTop < listScrollTop) {
-        list.scrollTop = offsetTop;
-      } else if (offsetTop + offsetHeight > listScrollTop + listHeight) {
-        list.scrollTop = offsetTop + offsetHeight - listHeight;
-      }
-    },
-    [ref]
-  );
-
-  const updateHighlighted = useCallback(
-    (element: HTMLElement) => {
-      setHighlightedItem(element.dataset.value);
-      setActiveDescendant(element.id);
-      updateScroll(element);
-    },
-    [setHighlightedItem, updateScroll]
-  );
+  } = useIsFocusVisible<HTMLUListElement>();
 
   const selectItem = useCallback(
-    (element: HTMLElement) => {
-      const newValue = element?.dataset.value;
-      if (newValue) {
-        setSelectedItem(newValue);
-        updateHighlighted(element);
+    (event: SyntheticEvent<HTMLElement>, item: Item) => {
+      onSelect?.(event, item);
+      if (item !== selectedItem) {
+        onChange?.(event, item);
       }
+
+      setSelectedItem(item);
+      setHighlightedIndex(getItemIndex(item));
     },
-    [setSelectedItem, updateHighlighted]
+    [
+      getItemIndex,
+      onChange,
+      onSelect,
+      selectedItem,
+      setHighlightedIndex,
+      setSelectedItem,
+    ]
   );
-
-  // Effect to move the cursor when items change controlled.
-  // this could be following active descendant if there is no better way of doing it when controlled
-  useEffect(() => {
-    const activeOptions = getOptions();
-    const highlightedIndex = activeOptions.findIndex(
-      (i) => i.dataset.value === highlightedItem
-    );
-    if (highlightedIndex) {
-      setActiveDescendant(activeOptions[highlightedIndex]?.id);
-      highlightedItem && updateScroll(activeOptions[highlightedIndex]);
-    }
-  }, [highlightedItem, getOptions, updateScroll]);
-
-  const focusFirstItem = () => {
-    // Find first active item
-    const activeOptions = getOptions();
-    const firstItem = activeOptions[0];
-    if (firstItem) {
-      updateHighlighted(firstItem);
-    }
-  };
-  const focusLastItem = () => {
-    // Find last active item
-    const activeOptions = getOptions();
-    const lastItem = activeOptions[activeOptions.length - 1];
-    if (lastItem) {
-      updateHighlighted(lastItem);
-      updateScroll(lastItem);
-    }
-  };
-
-  const findNextOption = (
-    currentOption: HTMLElement | null,
-    moves: number
-  ): HTMLElement => {
-    const activeOptions = getOptions();
-    // Returns next item, if no current option it will return 0
-    const nextOptionIndex = currentOption
-      ? activeOptions.indexOf(currentOption) + moves
-      : 0;
-    return (
-      activeOptions[nextOptionIndex] || activeOptions[activeOptions.length - 1]
-    );
-  };
-
-  const findPreviousOption = (
-    currentOption: HTMLElement,
-    moves: number
-  ): HTMLElement => {
-    // Return the previous option if it exists; otherwise, returns first option
-    const activeOptions = getOptions();
-    const currentOptionIndex = activeOptions.findIndex(
-      (i) => i.id === currentOption.id
-    );
-    return activeOptions[currentOptionIndex - moves] || activeOptions[0];
-  };
 
   // CONTEXT CALLBACKS
   const select = useCallback(
-    (event: SyntheticEvent<HTMLLIElement>) => {
-      const newValue = event.currentTarget.dataset.value;
-      const activeOptions = getOptions();
-      const isActiveOption =
-        activeOptions.findIndex((i) => i.id === event.currentTarget.id) !== -1;
-      if (newValue && isActiveOption) {
-        onSelect?.(event, { value: newValue });
-        if (selectedItem !== newValue) {
-          selectItem(event.currentTarget);
-          onChange?.(event, { value: selectedItem });
-        }
-      }
+    (event: SyntheticEvent<HTMLLIElement>, item: Item) => {
+      selectItem(event, item);
     },
-    [selectItem, selectedItem, onChange, onSelect, getOptions]
-  );
-
-  const isSelected = useCallback(
-    (value: string) => selectedItem === value,
-    [selectedItem]
+    [selectItem]
   );
 
   const highlight = useCallback(
-    (event: SyntheticEvent<HTMLLIElement>) => {
-      setHighlightedItem(event.currentTarget.dataset.value);
+    (_: SyntheticEvent<HTMLLIElement>, item: Item) => {
+      setHighlightedIndex(getItemIndex(item));
     },
-    [setHighlightedItem]
+    [getItemIndex, setHighlightedIndex]
   );
-
-  const isHighlighted = useCallback(
-    (value: string) => highlightedItem === value,
-    [highlightedItem]
-  );
-
-  const isFocused = useCallback(
-    (value: string) => isHighlighted(value) && focusVisible,
-    [focusVisible, isHighlighted]
-  );
-
-  const getActiveItem = () => {
-    const activeOptions = getOptions();
-    const activeIndex = activeOptions.findIndex(
-      (i) => i.id === activeDescendant
-    );
-    return activeOptions[activeIndex];
-  };
 
   // HANDLERS
   const blurHandler = () => {
@@ -230,63 +178,119 @@ export const useList = ({
   };
 
   // takes care of focus when using keyboard navigation
-  const focusHandler = (event: FocusEvent<HTMLUListElement | HTMLElement>) => {
+  const focusHandler = (event: FocusEvent<HTMLUListElement>) => {
     handleFocusVisible(event);
     if (isFocusVisibleRef.current) {
       setFocusVisible(true);
     }
-    const activeElement = getActiveItem();
-    if (activeElement) {
-      updateHighlighted(activeElement);
+    if (selectedItem) {
+      setHighlightedIndex(getItemIndex(selectedItem));
+    } else if (source.length > 0) {
+      setHighlightedIndex(0);
+    }
+  };
+
+  const highlightFirstAvailable = () => {
+    if (source.length === 0) {
+      setHighlightedIndex(null);
+      return;
+    }
+
+    for (let index = 0; index < source.length; index++) {
+      const item = source[index];
+      if (item && !itemDisabled(item)) {
+        setHighlightedIndex(index);
+        return;
+      }
+    }
+  };
+
+  const highlightLastAvailable = () => {
+    if (source.length === 0) {
+      setHighlightedIndex(null);
+      return;
+    }
+
+    for (let index = source.length - 1; index > -1; index--) {
+      const item = source[index];
+      if (item && !itemDisabled(item)) {
+        setHighlightedIndex(index);
+        return;
+      }
+    }
+  };
+
+  const highlightPrevious = (item: Item) => {
+    const currentIndex = getItemIndex(item);
+    if (currentIndex === -1) {
+      highlightFirstAvailable();
     } else {
-      focusFirstItem();
+      for (let index = currentIndex - 1; index > -1; index--) {
+        const item = source[index];
+        if (item && !itemDisabled(item)) {
+          setHighlightedIndex(index);
+          return;
+        }
+      }
+    }
+  };
+
+  const highlightNext = (item: Item) => {
+    const currentIndex = getItemIndex(item);
+    if (currentIndex === -1) {
+      highlightFirstAvailable();
+    } else {
+      for (let index = currentIndex + 1; index < source.length; index++) {
+        const item = source[index];
+        if (item && !itemDisabled(item)) {
+          setHighlightedIndex(index);
+          return;
+        }
+      }
     }
   };
 
   // takes care of keydown when using keyboard navigation
   const keyDownHandler = (event: KeyboardEvent<HTMLElement>) => {
     const { key } = event;
-    const currentItem = getActiveItem();
-    let nextItem = currentItem;
-    if (isFocusVisibleRef.current || !focusVisible) {
+
+    if (isFocusVisibleRef.current) {
       setFocusVisible(true);
     }
+
+    const currentItem = getItemAtIndex(highlightedIndex);
+
+    if (currentItem === undefined) return;
+
     switch (key) {
       case "ArrowUp":
+        highlightPrevious(currentItem);
+        event.preventDefault();
+        break;
       case "ArrowDown":
-        if (!currentItem) {
-          focusFirstItem();
-          break;
-        }
-        nextItem =
-          key === "ArrowUp"
-            ? findPreviousOption(currentItem, 1)
-            : findNextOption(currentItem, 1);
-
-        if (nextItem && nextItem !== currentItem) {
-          event.preventDefault();
-          updateHighlighted(nextItem);
-        }
+        highlightNext(currentItem);
+        event.preventDefault();
         break;
       case "Home":
         event.preventDefault();
-        focusFirstItem();
+        highlightFirstAvailable();
         break;
       case "End":
         event.preventDefault();
-        focusLastItem();
+        highlightLastAvailable();
         break;
       case " ":
       case "Enter":
         event.preventDefault();
-        if (nextItem) {
-          selectItem(nextItem);
-          onChange?.(event, { value: nextItem.dataset.value || "" });
+        const item = getItemAtIndex(highlightedIndex);
+        if (item) {
+          selectItem(event, item);
         }
         break;
       case "PageDown":
       case "PageUp":
         event.preventDefault();
+        // TODO: move highlight a page
         break;
       default:
         break;
@@ -294,30 +298,31 @@ export const useList = ({
   };
 
   // CONTEXT
-  const contextValue = useMemo(
-    () => ({
+  const contextValue = useMemo(() => {
+    return {
       disabled,
-      id,
       select,
-      isSelected,
-      isFocused,
       highlight,
-      isHighlighted,
-    }),
-    [disabled, id, select, isSelected, isFocused, highlight, isHighlighted]
-  );
+      getItemValue,
+    };
+  }, [disabled, getItemValue, highlight, select]);
 
   return {
+    id,
     focusHandler,
     keyDownHandler,
     blurHandler,
     mouseOverHandler,
     activeDescendant,
     selectedItem,
-    highlightedItem,
+    highlightedIndex,
     setSelectedItem,
-    setHighlightedItem,
+    setHighlightedIndex,
     contextValue,
     focusVisibleRef,
+    getItemId,
+    itemDisabled,
+    focusVisible,
+    getItemValue,
   };
 };

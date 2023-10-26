@@ -1,15 +1,25 @@
-import { forwardRef, HTMLAttributes, MouseEvent } from "react";
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+import { makePrefixer, useForkRef, useIdMemo } from "@salt-ds/core";
 import { clsx } from "clsx";
-import { makePrefixer, useIdMemo } from "@salt-ds/core";
+import {
+  ForwardedRef,
+  forwardRef,
+  HTMLAttributes,
+  MouseEvent,
+  useEffect,
+  useRef,
+} from "react";
 
-import { useWindow } from "@salt-ds/window";
 import { useComponentCssInjection } from "@salt-ds/styles";
+import { useWindow } from "@salt-ds/window";
 import listItemNextCss from "./ListItemNext.css";
 import { useListItem } from "./ListNextContext";
+import { ListItemNextType } from "./useList";
 
 const withBaseName = makePrefixer("saltListItemNext");
 
-export interface ListItemNextProps extends HTMLAttributes<HTMLLIElement> {
+export interface ListItemNextProps<Item extends ListItemNextType>
+  extends HTMLAttributes<HTMLLIElement> {
   /**
    * If true, the particular list item in list will be disabled.
    */
@@ -21,85 +31,89 @@ export interface ListItemNextProps extends HTMLAttributes<HTMLLIElement> {
   /**
    * List item value.
    */
-  value: string;
+  value: Item;
+
+  highlighted?: boolean;
+  focusVisible?: boolean;
+  selected?: boolean;
 }
 
-export const ListItemNext = forwardRef<HTMLLIElement, ListItemNextProps>(
-  function ListItemNext(
-    {
-      children,
-      className,
-      disabled: disabledProp,
-      id: idProp,
-      value,
-      onClick,
-      ...props
-    },
-    ref
-  ) {
-    const targetWindow = useWindow();
-    useComponentCssInjection({
-      testId: "salt-list-item-next",
-      css: listItemNextCss,
-      window: targetWindow,
-    });
-    const id = useIdMemo(idProp);
+export const ListItemNext = forwardRef(function ListItemNext<
+  Item extends ListItemNextType
+>(
+  {
+    className,
+    disabled,
+    id: idProp,
+    value,
+    onClick,
+    selected,
+    highlighted,
+    focusVisible,
+    ...props
+  }: ListItemNextProps<Item>,
+  ref: ForwardedRef<HTMLLIElement>
+) {
+  const targetWindow = useWindow();
+  useComponentCssInjection({
+    testId: "salt-list-item-next",
+    css: listItemNextCss,
+    window: targetWindow,
+  });
+  const id = useIdMemo(idProp);
 
-    const listContext = useListItem();
-    if (!listContext) return null;
+  const elementRef = useRef<HTMLLIElement>(null);
+  const setRef = useForkRef(elementRef, ref);
+  const listContext = useListItem();
 
-    const {
-      id: contextId,
-      disabled: contextDisabled,
-      select,
-      isSelected,
-      isFocused,
-      highlight,
-      isHighlighted,
-    } = listContext;
+  useEffect(() => {
+    if (highlighted) {
+      elementRef.current?.scrollIntoView({ block: "nearest" });
+    }
+  }, [highlighted]);
 
-    const itemId = `${contextId || "listNext"}--${id}`;
-    const disabled = disabledProp || contextDisabled;
-    const selected = isSelected(value);
-    const focused = isFocused(value);
-    const highlighted = isHighlighted(value);
+  if (!listContext) {
+    // TODO: Warning
 
-    const handleClick = (event: MouseEvent<HTMLLIElement>) => {
-      if (!disabled) {
-        select(event);
-        onClick?.(event);
-      }
-    };
-
-    const handleMouseMove = (event: MouseEvent<HTMLLIElement>) => {
-      if (!highlighted) {
-        highlight(event);
-      }
-    };
-
-    return (
-      <li
-        ref={ref}
-        className={clsx(
-          withBaseName(),
-          {
-            [withBaseName("disabled")]: disabled,
-            [withBaseName("highlighted")]: highlighted,
-            [withBaseName("focused")]: focused,
-          },
-          className
-        )}
-        role="option"
-        aria-disabled={disabled || undefined}
-        aria-selected={selected || undefined}
-        id={itemId}
-        data-value={value}
-        onClick={handleClick}
-        onMouseMove={handleMouseMove}
-        {...props}
-      >
-        {children}
-      </li>
-    );
+    return null;
   }
-);
+  const { select, highlight, getItemValue } = listContext;
+
+  const handleClick = (event: MouseEvent<HTMLLIElement>) => {
+    if (!disabled) {
+      select(event, value);
+      onClick?.(event);
+    }
+  };
+
+  const handleMouseMove = (event: MouseEvent<HTMLLIElement>) => {
+    if (!highlighted) {
+      highlight(event, value);
+    }
+  };
+
+  return (
+    <li
+      ref={setRef}
+      className={clsx(
+        withBaseName(),
+        {
+          [withBaseName("disabled")]: disabled,
+          [withBaseName("highlighted")]: highlighted,
+          [withBaseName("focused")]: focusVisible && highlighted,
+        },
+        className
+      )}
+      role="option"
+      aria-disabled={disabled || undefined}
+      aria-selected={selected || undefined}
+      id={id}
+      data-value={value}
+      onClick={handleClick}
+      onMouseMove={handleMouseMove}
+      {...props}
+    >
+      {getItemValue(value)}
+    </li>
+  );
+});

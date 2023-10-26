@@ -30,7 +30,7 @@ export interface SourceGroup<T> {
   childNodes: T[];
 }
 
-export type CollectionOptions<T> = {
+export interface CollectionOptions<T> {
   collapsibleHeaders?: boolean;
   defaultExpanded?: boolean;
   filterPattern?: string;
@@ -39,17 +39,16 @@ export type CollectionOptions<T> = {
   noChildrenLabel?: string;
   itemToString?: (item: T) => string;
   revealSelected?: boolean | T | T[];
-};
+}
 
-export type CollectionHookProps<T> = {
+export interface CollectionHookProps<T> {
   children?: ReactNode;
   id: string;
-  label?: string;
-  source?: ReadonlyArray<T>;
+  source?: readonly T[];
   options?: CollectionOptions<T>;
-};
+}
 
-export type CollectionHookResult<T> = {
+export interface CollectionHookResult<T> {
   /** set expanded to false for target */
   collapseGroupItem: (item: CollectionItem<T>) => void;
   /** data items from the collection to be rendered */
@@ -74,4 +73,4 @@ export type CollectionHookResult<T> = {
     : CollectionItem<T>[];
   toCollectionItem: (item: T) => CollectionItem<T>;
   itemToId: (item: T) => string;
-};
+}

@@ -1,9 +1,8 @@
-import { StoryFn, Meta } from "@storybook/react";
-
-import { DropdownNext, DropdownNextProps } from "@salt-ds/lab";
 import { Button, FlexLayout, StackLayout } from "@salt-ds/core";
 import { ArrowDownIcon, ArrowUpIcon } from "@salt-ds/icons";
-import { SyntheticEvent, useState } from "react";
+import { DropdownNext, DropdownNextProps } from "@salt-ds/lab";
+import { Meta, StoryFn } from "@storybook/react";
+import { useState } from "react";
 
 export default {
   title: "Lab/Dropdown Next",
@@ -22,35 +21,43 @@ const ListExample = [
   "Georgia",
 ];
 
-const DropdownTemplate: StoryFn<DropdownNextProps> = ({ source, ...args }) => {
-  const handleSelect = (_event: SyntheticEvent, data: { value: string }) => {
-    console.log("selected item", data.value);
-  };
+const DropdownTemplate: StoryFn<DropdownNextProps<string>> = ({ ...args }) => {
   return (
-    <DropdownNext source={ListExample} onSelect={handleSelect} {...args} />
+    <DropdownNext
+      onSelect={(_, data) => {
+        console.log("selected item", data);
+      }}
+      {...args}
+    />
   );
 };
 
 export const Default = DropdownTemplate.bind({});
+Default.args = {
+  source: ListExample,
+};
 
 export const WithDefaultSelected = DropdownTemplate.bind({});
 WithDefaultSelected.args = {
-  defaultSelected: "California",
+  defaultSelectedItem: "California",
+  source: ListExample,
 };
 
 export const Readonly = DropdownTemplate.bind({});
 Readonly.args = {
   readOnly: true,
-  defaultSelected: "California",
+  defaultSelectedItem: "California",
+  source: ListExample,
 };
 
 export const Disabled = DropdownTemplate.bind({});
 Disabled.args = {
   disabled: true,
-  defaultSelected: "California",
+  defaultSelectedItem: "California",
+  source: ListExample,
 };
 
-export const Variants: StoryFn<DropdownNextProps> = ({
+export const Variants: StoryFn<DropdownNextProps<string>> = ({
   source = ListExample,
 }) => {
   return (
@@ -61,7 +68,7 @@ export const Variants: StoryFn<DropdownNextProps> = ({
   );
 };
 
-export const Controlled: StoryFn<DropdownNextProps> = ({
+export const Controlled: StoryFn<DropdownNextProps<string>> = ({
   source = ListExample,
   ...props
 }) => {
@@ -121,8 +128,8 @@ export const Controlled: StoryFn<DropdownNextProps> = ({
         {...props}
         source={source}
         open={open}
-        selected={selectedItem}
-        highlightedItem={ListExample[highlightedIndex]}
+        selectedItem={selectedItem}
+        highlightedIndex={highlightedIndex}
       />
     </FlexLayout>
   );

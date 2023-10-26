@@ -17,17 +17,19 @@ import {
   ForwardedRef,
   SyntheticEvent,
   ComponentPropsWithoutRef,
+  ReactElement,
 } from "react";
 import { useWindow } from "@salt-ds/window";
 import dropdownNextCss from "./DropdownNext.css";
 import { useComponentCssInjection } from "@salt-ds/styles";
 import { Placement } from "@floating-ui/react";
 import { useDropdownNext } from "./useDropdownNext";
+import { ListItemNextType } from "../list-next/useList";
 
 const withBaseName = makePrefixer("saltDropdownNext");
 
-export interface DropdownNextProps
-  extends Omit<ComponentPropsWithoutRef<"button">, "onSelect"> {
+export interface DropdownNextProps<Item extends ListItemNextType>
+  extends Omit<ComponentPropsWithoutRef<"button">, "onSelect" | "onChange"> {
   /**
    * If `true`, dropdown will be disabled.
    */
@@ -35,11 +37,11 @@ export interface DropdownNextProps
   /**
    * Initially selected value for the dropdown, for use only in uncontrolled component.
    */
-  defaultSelected?: string;
+  defaultSelectedItem?: Item;
   /**
    * List of options when using a dropdown.
    */
-  source: string[];
+  source: Item[];
   /**
    * If `true`, dropdown is read only.
    */
@@ -59,42 +61,46 @@ export interface DropdownNextProps
   /**
    * Additional props for dropdown list.
    */
-  ListProps?: ListNextProps;
+  ListProps?: ListNextProps<Item>;
   /* Status open or close for use in controlled component.  */
   open?: boolean;
   /**
    * Callback for list selection event
    */
-  onSelect?: (event: SyntheticEvent, data: { value: string }) => void;
+  onSelect?: (event: SyntheticEvent, data: Item) => void;
+  /**
+   * Callback for list change event
+   */
+  onChange?: (event: SyntheticEvent, data: Item) => void;
   /**
   /* Selected prop for use in controlled component. */
-  selected?: string;
+  selectedItem?: Item | null;
   /* Highlighted item prop for use in controlled component. */
-  highlightedItem?: string;
+  highlightedIndex?: number | null;
 }
 
-export const DropdownNext = forwardRef(function DropdownNext(
-  props: DropdownNextProps,
-  ref: ForwardedRef<HTMLButtonElement>
-) {
+export const DropdownNext = forwardRef(function DropdownNext<
+  Item extends ListItemNextType
+>(props: DropdownNextProps<Item>, ref: ForwardedRef<HTMLButtonElement>) {
   const {
     className,
     disabled,
     variant = "primary",
     id: dropdownIdProp,
-    defaultSelected,
+    defaultSelectedItem,
     readOnly,
     source,
     placement = "bottom",
     open: openControlProp,
-    selected: selectedControlProp,
-    highlightedItem: highlightedItemControlProp,
+    selectedItem: selectedItemProp,
+    highlightedIndex: highlightedIndexProp,
     onFocus,
     onKeyDown,
     onBlur,
     onMouseOver,
     onMouseDown,
-    onSelect,
+    onSelect: onSelectProp,
+    onChange: onChangeProp,
     listRef: listRefProp,
     ListProps,
     ...restProps
@@ -113,22 +119,24 @@ export const DropdownNext = forwardRef(function DropdownNext(
 
   const setListRef = useForkRef(listRefProp, listRef);
   const listProps = {
-    defaultSelected,
+    defaultSelectedItem,
     disabled,
     ref: listRef,
     id: listId,
-    onSelect: onSelect,
-    selected: selectedControlProp,
-    highlightedItem: highlightedItemControlProp,
+    onSelect: onSelectProp,
+    onChange: onChangeProp,
+    selectedItem: selectedItemProp,
+    highlightedIndex: highlightedIndexProp,
+    source,
   };
 
   const {
     handlers,
     activeDescendant,
     selectedItem,
-    highlightedItem,
-    getListItems,
+    highlightedIndex,
     portalProps,
+    getItemValue,
   } = useDropdownNext({
     listProps,
     placement,
@@ -191,6 +199,8 @@ export const DropdownNext = forwardRef(function DropdownNext(
     onMouseDown?.(event);
   };
 
+  const buttonValue = selectedItem ? getItemValue(selectedItem) : "";
+
   return (
     <div className={clsx(withBaseName())}>
       <button
@@ -201,7 +211,7 @@ export const DropdownNext = forwardRef(function DropdownNext(
         onMouseOver={handleMouseOver}
         onMouseDown={handleMouseDown}
         onBlur={handleBlur}
-        value={selectedItem}
+        value={buttonValue}
         className={clsx(
           withBaseName("button"),
           withBaseName(variant),
@@ -222,7 +232,7 @@ export const DropdownNext = forwardRef(function DropdownNext(
         {...restProps}
         ref={triggerRef}
       >
-        <span className={clsx(withBaseName("buttonText"))}>{selectedItem}</span>
+        <span className={clsx(withBaseName("buttonText"))}>{buttonValue}</span>
         {getIcon()}
       </button>
       <FloatingComponent
@@ -234,16 +244,18 @@ export const DropdownNext = forwardRef(function DropdownNext(
         <ListNext
           id={listId}
           className={clsx(withBaseName("list"), ListProps?.className)}
-          disableFocus
+          source={source}
           disabled={disabled || ListProps?.disabled}
-          selected={selectedItem}
-          highlightedItem={highlightedItem}
+          selectedItem={selectedItem}
+          highlightedIndex={highlightedIndex}
           {...ListProps}
           ref={setListRef}
-        >
-          {getListItems(source)}
-        </ListNext>
+        />
       </FloatingComponent>
     </div>
   );
-});
+}) as <Item extends ListItemNextType>(
+  props: DropdownNextProps<Item> & {
+    ref?: ForwardedRef<HTMLButtonElement>;
+  }
+) => ReactElement<DropdownNextProps<Item>>;

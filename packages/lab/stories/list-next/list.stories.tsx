@@ -1,5 +1,3 @@
-import { Meta, StoryFn } from "@storybook/react";
-import { ListItemNext, ListNext, ListNextProps } from "../../src";
 import {
   Button,
   FlexLayout,
@@ -7,94 +5,106 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@salt-ds/core";
-import { ChangeEvent, KeyboardEvent, SyntheticEvent, useState } from "react";
-import { usStateExampleData } from "../assets/exampleData";
 import { ArrowDownIcon, ArrowUpIcon } from "@salt-ds/icons";
+import { Meta, StoryFn } from "@storybook/react";
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  SyntheticEvent,
+  useCallback,
+  useState,
+} from "react";
+import { ListItemNextType, ListNext, ListNextProps } from "../../src";
+import { usStateExampleData } from "../assets/exampleData";
 
 export default {
   title: "Lab/List Next",
   component: ListNext,
 } as Meta<typeof ListNext>;
 
-const getListItems = ({ disabledItems = [] }: { disabledItems?: number[] }) =>
-  usStateExampleData.map((item, index) => {
-    return (
-      <ListItemNext
-        key={index}
-        disabled={disabledItems.includes(index)}
-        id={`controlled-list-item-${index}`}
-        value={item}
-      >
-        {item}
-      </ListItemNext>
-    );
-  });
+export const Default: StoryFn<ListNextProps<string>> = ({
+  onChange,
+  ...rest
+}) => {
+  const itemDisabled = useCallback(
+    (item: string) =>
+      [usStateExampleData[1], usStateExampleData[5]].includes(item),
+    []
+  );
+  return (
+    <ListNext
+      aria-label="List example"
+      style={{ height: "150px", width: 300 }}
+      onChange={(e, value) => {
+        console.log("new selection", value);
+        onChange?.(e, value);
+      }}
+      itemDisabled={itemDisabled}
+      {...rest}
+    />
+  );
+};
 
-export const Default: StoryFn<ListNextProps> = ({
-  children,
+Default.args = {
+  source: usStateExampleData,
+};
+
+export const ObjectAsSource: StoryFn<ListNextProps<ListItemNextType>> = ({
   onChange,
   ...rest
 }) => {
   return (
     <ListNext
-      aria-label="Declarative List example"
-      style={{ height: "150px" }}
-      onChange={(e, { value }) => {
+      aria-label="List example"
+      style={{ height: "150px", width: 300 }}
+      onChange={(e, value) => {
         console.log("new selection", value);
-        onChange?.(e, { value });
+        onChange?.(e, value);
       }}
       {...rest}
-    >
-      {children ||
-        getListItems({
-          disabledItems: [1, 5],
-        })}
-    </ListNext>
+    />
   );
 };
+ObjectAsSource.args = {
+  source: usStateExampleData.map((s, index) => ({
+    value: s,
+    disabled: [1, 5].includes(index),
+  })),
+};
 
-Default.args = {};
-
-export const Controlled: StoryFn<ListNextProps> = ({ onChange, ...rest }) => {
-  const [highlightedIndex, setHighlightedIndex] = useState<number | undefined>(
-    0
-  );
-  const [selectedItem, setSelectedItem] = useState<string | undefined>(
-    undefined
-  );
+export const Controlled: StoryFn<ListNextProps<string>> = ({
+  onChange,
+  ...rest
+}) => {
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [controls, setControls] = useState<string>("buttons");
+  const [inputValue, setInputValue] = useState("");
 
   const handleArrowDown = () => {
-    const nextIndex = highlightedIndex === undefined ? 0 : highlightedIndex + 1;
-    setHighlightedIndex(nextIndex);
+    setHighlightedIndex(
+      Math.min(highlightedIndex + 1, usStateExampleData.length - 1)
+    );
   };
 
   const handleArrowUp = () => {
-    const prevIndex =
-      highlightedIndex === undefined ? undefined : highlightedIndex - 1;
-    setHighlightedIndex(prevIndex);
+    setHighlightedIndex(Math.max(0, highlightedIndex - 1));
   };
 
   const handleSelect = () => {
-    if (highlightedIndex !== undefined) {
-      setSelectedItem(usStateExampleData[highlightedIndex]);
-    }
-  };
-
-  const handleClick = (index: number) => {
-    setSelectedItem(usStateExampleData[index]);
+    setSelectedItem(usStateExampleData[highlightedIndex]);
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value.toLowerCase();
-    setSelectedItem(inputValue);
-    const firstMatchingItem =
-      inputValue.length - 1 >= 0
-        ? usStateExampleData.findIndex((item) =>
-            item.toLowerCase().includes(inputValue)
-          )
-        : undefined;
-    setHighlightedIndex(firstMatchingItem);
+    setInputValue(event.target.value);
+    const firstMatchingIndex = usStateExampleData.findIndex((item) =>
+      item.toLowerCase().includes(inputValue)
+    );
+    setHighlightedIndex(firstMatchingIndex === -1 ? 0 : firstMatchingIndex);
+    setSelectedItem(
+      firstMatchingIndex === -1 ? null : usStateExampleData[firstMatchingIndex]
+    );
   };
 
   const handleInputKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -161,7 +171,7 @@ export const Controlled: StoryFn<ListNextProps> = ({ onChange, ...rest }) => {
         </FlexLayout>
       ) : (
         <Input
-          value={selectedItem}
+          value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
         ></Input>
@@ -169,35 +179,21 @@ export const Controlled: StoryFn<ListNextProps> = ({ onChange, ...rest }) => {
       <ListNext
         {...rest}
         aria-label="Controlled List example"
-        selected={selectedItem}
-        disableFocus
-        highlightedItem={
-          highlightedIndex === undefined
-            ? undefined
-            : usStateExampleData[highlightedIndex]
-        }
-        onChange={(e, { value }) => {
-          console.log("new selection", value);
-          onChange?.(e, { value });
+        selectedItem={selectedItem}
+        highlightedIndex={highlightedIndex}
+        onChange={(e, item) => {
+          console.log("new selection", item);
+          onChange?.(e, item);
+          setSelectedItem(item);
+          setInputValue(item);
         }}
         style={{ maxHeight: "150px", width: "100%" }}
-      >
-        {usStateExampleData.map((item, index) => {
-          return (
-            <ListItemNext
-              key={index}
-              onClick={() => handleClick(index)}
-              onMouseMove={() => setHighlightedIndex(index)}
-              value={item}
-              id={`controlled-item-${item}-${index}`}
-            >
-              {item}
-            </ListItemNext>
-          );
-        })}
-      </ListNext>
+      />
     </FlexLayout>
   );
+};
+Controlled.args = {
+  source: usStateExampleData,
 };
 
 export const Disabled = Default.bind({});
@@ -207,28 +203,29 @@ Disabled.args = {
 
 export const DisabledSelected = Default.bind({});
 DisabledSelected.args = {
-  defaultSelected: "Alaska",
+  defaultSelectedItem: "Alaska",
+  source: usStateExampleData,
 };
 
-export const Empty: StoryFn<ListNextProps> = ({ children, ...rest }) => {
+export const Empty: StoryFn<ListNextProps<string>> = (source, args) => {
   const [showList, setShowList] = useState(false);
-  const listItems = showList
-    ? getListItems({
-        disabledItems: [1, 5],
-      })
-    : [];
+
+  const itemDisabled = useCallback(
+    (item: string) =>
+      [usStateExampleData[1], usStateExampleData[5]].includes(item),
+    []
+  );
 
   return (
     <FlexLayout direction="column" style={{ height: "200px" }}>
       <Button onClick={() => setShowList(!showList)}>Toggle list</Button>
-
-      {listItems.length > 0 ? (
-        <ListNext {...rest} aria-label="Populated List example">
-          {listItems}
-        </ListNext>
-      ) : (
-        <div>List is empty</div>
-      )}
+      <ListNext
+        source={showList ? usStateExampleData : []}
+        itemDisabled={itemDisabled}
+        aria-label="Populated List example"
+        emptyPlaceholder={<div>List is empty</div>}
+        {...args}
+      />
     </FlexLayout>
   );
 };

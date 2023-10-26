@@ -13,25 +13,24 @@ import {
   useFloatingUI,
   UseFloatingUIProps,
 } from "@salt-ds/core";
-import { ListItemNext } from "../list-next";
 import { HTMLProps, KeyboardEvent, FocusEvent } from "react";
-import { useList, UseListProps } from "../list-next/useList";
+import { ListItemNextType, useList, UseListProps } from "../list-next/useList";
 
-interface UseDropdownNextProps
+interface UseDropdownNextProps<Item extends ListItemNextType>
   extends Partial<
     Pick<UseFloatingUIProps, "onOpenChange" | "open" | "placement">
   > {
-  listProps: UseListProps;
+  listProps: UseListProps<Item>;
   // props for controlled dropdown
   openControlProp?: boolean;
 }
 
-export const useDropdownNext = ({
+export const useDropdownNext = <Item extends ListItemNextType>({
   listProps,
   openControlProp,
   onOpenChange: onOpenChangeProp,
   placement: placementProp,
-}: UseDropdownNextProps) => {
+}: UseDropdownNextProps<Item>) => {
   const [open, setOpen] = useControlled({
     controlled: openControlProp,
     default: false,
@@ -48,37 +47,10 @@ export const useDropdownNext = ({
     activeDescendant,
     selectedItem,
     setSelectedItem,
-    highlightedItem,
-    setHighlightedItem,
-    contextValue: listContextValue,
+    highlightedIndex,
     focusVisibleRef,
-  } = useList({
-    ...listProps,
-  });
-
-  const { select, highlight } = listContextValue;
-
-  // LIST SOURCE
-  const getListItems = (source: string[]) => {
-    if (!source) return;
-
-    return source.map((item, index) => {
-      return (
-        <ListItemNext
-          key={index}
-          value={item}
-          onMouseDown={(event) => {
-            select(event);
-          }}
-          onMouseMove={(event) => {
-            highlight(event);
-          }}
-        >
-          {item}
-        </ListItemNext>
-      );
-    });
-  };
+    getItemValue,
+  } = useList(listProps);
 
   // FLOATING PORTAL
   const onOpenChange = (open: boolean) => {
@@ -112,6 +84,7 @@ export const useDropdownNext = ({
 
   const getDropdownNextProps = (): HTMLProps<HTMLDivElement> => {
     return getFloatingProps({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       "data-placement": placement,
       ref: floating,
@@ -134,9 +107,7 @@ export const useDropdownNext = ({
 
   // handles focus on mouse and keyboard
   const focusHandler = (event: FocusEvent<HTMLElement>) => {
-    if (selectedItem) {
-      listFocusHandler(event as FocusEvent<HTMLUListElement>);
-    }
+    listFocusHandler(event as FocusEvent<HTMLUListElement>);
   };
 
   // handles mouse click on dropdown button
@@ -153,11 +124,16 @@ export const useDropdownNext = ({
     const { key } = event;
     switch (key) {
       case "ArrowUp":
-        listKeyDownHandler(event);
+        if (open) {
+          listKeyDownHandler(event);
+        }
         break;
       case "ArrowDown":
-        setOpen(true);
-        listKeyDownHandler(event);
+        if (!open) {
+          setOpen(true);
+        } else {
+          listKeyDownHandler(event);
+        }
         break;
       case " ":
       case "Enter":
@@ -199,10 +175,9 @@ export const useDropdownNext = ({
     activeDescendant,
     selectedItem,
     setSelectedItem,
-    highlightedItem,
-    setHighlightedItem,
+    highlightedIndex,
     focusVisibleRef,
-    getListItems,
+    getItemValue,
     portalProps: {
       open,
       setOpen,
