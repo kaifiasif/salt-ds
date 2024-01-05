@@ -1,5 +1,26 @@
 # @salt-ds/lab
 
+## 1.0.0-alpha.25
+
+### Minor Changes
+
+- 1d292f2e: Refactored FileDropZone.
+
+  - FileDropZone has been split into three composible pieces: FileDropZone, FileDropZoneIcon and FileDropZoneTrigger.
+  - Validation is handled outside of the component. `onFilesAccepted`, `onFilesRejected` and `validate` have been replaced with `onDrop` and `status`.
+  - Aligned styling to Salt.
+
+### Patch Changes
+
+- f7fcbd11: Fixed issue where components are not injecting their styles.
+
+## 1.0.0-alpha.24
+
+### Patch Changes
+
+- d9794a06: Fix global css clashing issues by replacing un-prefixed classes .root and .rootDisabledAlpha in ColorPicker with prefixed (.saltColorChooserPicker-root and .saltColorChooserPicker-rootDisabledAlpha)
+- 7e352933: Removed left and right padding from TabstripNext for the inline variant.
+
 ## 1.0.0-alpha.23
 
 ### Patch Changes
