@@ -8,14 +8,15 @@
   overflow: auto;
   padding: var(--salt-spacing-300);
   box-shadow: var(--salt-overlayable-shadow-modal);
-  z-index: calc(var(--salt-zIndex-appHeader) - 1);
+  z-index: var(--salt-zIndex-drawer);
   position: fixed;
   top: 0;
 }
 
-.saltDrawer-overlay {
-  background: var(--salt-overlayable-background);
-  z-index: var(--salt-zIndex-drawer);
+.saltButton-secondary.saltDrawer-closeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 /* Styles applied when variant = "primary" */

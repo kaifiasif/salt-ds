@@ -1,26 +1,39 @@
-import { forwardRef, HTMLAttributes, useEffect, useState } from "react";
+import {
+  ComponentPropsWithoutRef,
+  ForwardedRef,
+  forwardRef,
+  HTMLAttributes,
+  HTMLProps,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { clsx } from "clsx";
 import {
-  FloatingFocusManager,
-  FloatingOverlay,
-  FloatingPortal,
+  useClick,
+  useDismiss,
+  useInteractions,
+  useRole,
 } from "@floating-ui/react";
-import { makePrefixer, SaltProvider, useForkRef } from "@salt-ds/core";
+import {
+  makePrefixer,
+  Scrim,
+  useControlled,
+  useFloatingComponent,
+  useFloatingUI,
+  useForkRef,
+  useId,
+} from "@salt-ds/core";
 import { useWindow } from "@salt-ds/window";
 import { useComponentCssInjection } from "@salt-ds/styles";
-import { useDrawer } from "./useDrawer";
 
 import drawerCss from "./Drawer.css";
-
-export const DRAWER_POSITIONS = ["left", "top", "right", "bottom"] as const;
-
-export type DrawerPositions = (typeof DRAWER_POSITIONS)[number];
-
-export interface DrawerProps extends HTMLAttributes<HTMLDivElement> {
+import { DrawerContext } from "./DrawerContext";
+export interface DrawerProps extends ComponentPropsWithoutRef<"div"> {
   /**
-   * Defines the drawer position within the screen.
+   * Defines the drawer position within the screen. Defaults to `left`.
    */
-  position?: DrawerPositions;
+  position?: "left" | "top" | "right" | "bottom";
   /**
    * Display or hide the component.
    */
@@ -28,7 +41,7 @@ export interface DrawerProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * Callback function triggered when open state changes.
    */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (newOpen: boolean) => void;
   /**
    * Change background color palette
    */
@@ -39,15 +52,16 @@ const withBaseName = makePrefixer("saltDrawer");
 
 export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
   props,
-  ref
+  ref: ForwardedRef<HTMLDivElement>
 ) {
   const {
     children,
     className,
     position = "left",
-    open = true,
+    open = false,
     onOpenChange,
     variant = "primary",
+    id: idProp,
     ...rest
   } = props;
 
@@ -59,13 +73,29 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
   });
 
   const [showComponent, setShowComponent] = useState(false);
+  const { Component: FloatingComponent } = useFloatingComponent();
 
-  const { floating, context } = useDrawer({
+  const id = useId(idProp);
+
+  const { context, floating } = useFloatingUI({
     open,
     onOpenChange,
   });
 
-  const floatingRef = useForkRef<HTMLDivElement>(floating, ref);
+  const { getFloatingProps } = useInteractions([
+    useRole(context),
+    useClick(context),
+    useDismiss(context),
+  ]);
+
+  const handleRef = useForkRef<HTMLDivElement>(floating, ref);
+
+  // const getDrawerProps = () => {
+  //   getFloatingProps({
+  //     ref: floating,
+  //     id: `${id}-drawer`,
+  //   });
+  // };
 
   useEffect(() => {
     if (open && !showComponent) {
@@ -73,38 +103,46 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
     }
   }, [open, showComponent]);
 
+  if (!showComponent) return <></>;
+
   return (
-    <FloatingPortal>
-      {/* The provider is needed to support the use case where an app has nested modes. The element that is portalled needs to have the same style as the current scope */}
-      <SaltProvider>
-        {showComponent && (
-          <FloatingOverlay className={withBaseName("overlay")} lockScroll>
-            <FloatingFocusManager context={context}>
-              <div
-                ref={floatingRef}
-                className={clsx(
-                  withBaseName(),
-                  withBaseName(position),
-                  {
-                    [withBaseName("enterAnimation")]: open,
-                    [withBaseName("exitAnimation")]: !open,
-                    [withBaseName(variant)]: variant,
-                  },
-                  className
-                )}
-                onAnimationEnd={() => {
-                  if (!open && showComponent) {
-                    setShowComponent(false);
-                  }
-                }}
-                {...rest}
-              >
-                {children}
-              </div>
-            </FloatingFocusManager>
-          </FloatingOverlay>
-        )}
-      </SaltProvider>
-    </FloatingPortal>
+    <>
+      {/* <DrawerContext.Provider> */}
+      <Scrim>
+        <FloatingComponent
+          aria-modal="true"
+          open={open}
+          ref={handleRef}
+          aria-labelledby={`${id}-header`}
+          aria-describedby={`${id}-content`}
+          width={undefined}
+          height={undefined}
+          focusManagerProps={{
+            context: context,
+          }}
+          className={clsx(
+            withBaseName(),
+            withBaseName(position),
+            {
+              [withBaseName("enterAnimation")]: open,
+              [withBaseName("exitAnimation")]: !open,
+              [withBaseName(variant)]: variant,
+            },
+            className
+          )}
+          onAnimationEnd={() => {
+            if (!open && showComponent) {
+              console.log("onAnimationEnd");
+              setShowComponent(false);
+            }
+          }}
+          {...getFloatingProps()}
+          {...rest}
+        >
+          {children}
+        </FloatingComponent>
+      </Scrim>
+      {/* </DrawerContext.Provider> */}
+    </>
   );
 });
