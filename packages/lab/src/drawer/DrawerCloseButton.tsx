@@ -5,16 +5,16 @@ import { useWindow } from "@salt-ds/window";
 import { useComponentCssInjection } from "@salt-ds/styles";
 import { CloseIcon } from "@salt-ds/icons";
 
-import drawerCss from "./Drawer.css";
+import drawerCloseButtonCss from "./DrawerCloseButton.css";
 
-const withBaseName = makePrefixer("saltDrawer");
+const withBaseName = makePrefixer("saltDrawerCloseButton");
 
 export const DrawerCloseButton = forwardRef<HTMLButtonElement, ButtonProps>(
   function DrawerCloseButton({ className, ...rest }, ref) {
     const targetWindow = useWindow();
     useComponentCssInjection({
       testId: "salt-drawer-close-button",
-      css: drawerCss,
+      css: drawerCloseButtonCss,
       window: targetWindow,
     });
 
@@ -23,7 +23,7 @@ export const DrawerCloseButton = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         aria-label="Close Drawer"
         variant="secondary"
-        className={clsx(withBaseName("closeButton"), className)}
+        className={clsx(withBaseName(), className)}
         {...rest}
       >
         <CloseIcon aria-hidden />
