@@ -92,6 +92,14 @@ DefaultSecondary.args = {
   variant: "secondary",
 };
 
+const FormFieldExample = () => (
+  <FormField>
+    <FormFieldLabel>Label</FormFieldLabel>
+    <Input />
+    <FormFieldHelperText>Help text appears here</FormFieldHelperText>
+  </FormField>
+);
+
 export const TopFormField = () => {
   const [open, setOpen] = useState(false);
   const id = "top-drawer";
@@ -134,14 +142,6 @@ export const TopFormField = () => {
     </>
   );
 };
-
-const FormFieldExample = () => (
-  <FormField>
-    <FormFieldLabel>Label</FormFieldLabel>
-    <Input />
-    <FormFieldHelperText>Help text appears here</FormFieldHelperText>
-  </FormField>
-);
 
 export const RightFormField = () => {
   const [open, setOpen] = useState(false);

@@ -8,9 +8,3 @@
   height: 140px;
   background-color: var(--salt-color-gray-40);
 }
-
-@media (prefers-reduced-motion) {
-  .reduced-motion.saltDrawer {
-    animation: none;
-  }
-}
