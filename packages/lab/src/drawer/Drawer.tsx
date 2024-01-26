@@ -2,10 +2,7 @@ import {
   ComponentPropsWithoutRef,
   ForwardedRef,
   forwardRef,
-  HTMLAttributes,
-  HTMLProps,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 import { clsx } from "clsx";
@@ -18,7 +15,6 @@ import {
 import {
   makePrefixer,
   Scrim,
-  useControlled,
   useFloatingComponent,
   useFloatingUI,
   useForkRef,
@@ -26,9 +22,8 @@ import {
 } from "@salt-ds/core";
 import { useWindow } from "@salt-ds/window";
 import { useComponentCssInjection } from "@salt-ds/styles";
-
 import drawerCss from "./Drawer.css";
-import { DrawerContext } from "./DrawerContext";
+
 export interface DrawerProps extends ComponentPropsWithoutRef<"div"> {
   /**
    * Defines the drawer position within the screen. Defaults to `left`.
@@ -90,59 +85,53 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
 
   const handleRef = useForkRef<HTMLDivElement>(floating, ref);
 
-  // const getDrawerProps = () => {
-  //   getFloatingProps({
-  //     ref: floating,
-  //     id: `${id}-drawer`,
-  //   });
-  // };
+  const getDrawerProps = () => {
+    return getFloatingProps({
+      ref: floating,
+      id: `${id}-drawer`,
+    });
+  };
 
   useEffect(() => {
     if (open && !showComponent) {
       setShowComponent(true);
     }
-  }, [open, showComponent]);
+  }, [open, showComponent, setShowComponent]);
 
   if (!showComponent) return <></>;
 
   return (
-    <>
-      {/* <DrawerContext.Provider> */}
-      <Scrim>
-        <FloatingComponent
-          aria-modal="true"
-          open={open}
-          ref={handleRef}
-          aria-labelledby={`${id}-header`}
-          aria-describedby={`${id}-content`}
-          width={undefined}
-          height={undefined}
-          focusManagerProps={{
-            context: context,
-          }}
-          className={clsx(
-            withBaseName(),
-            withBaseName(position),
-            {
-              [withBaseName("enterAnimation")]: open,
-              [withBaseName("exitAnimation")]: !open,
-              [withBaseName(variant)]: variant,
-            },
-            className
-          )}
-          onAnimationEnd={() => {
-            if (!open && showComponent) {
-              console.log("onAnimationEnd");
-              setShowComponent(false);
-            }
-          }}
-          {...getFloatingProps()}
-          {...rest}
-        >
-          {children}
-        </FloatingComponent>
-      </Scrim>
-      {/* </DrawerContext.Provider> */}
-    </>
+    <Scrim>
+      <FloatingComponent
+        aria-modal="true"
+        open={open}
+        ref={handleRef}
+        aria-labelledby={`${id}-header`}
+        aria-describedby={`${id}-content`}
+        focusManagerProps={{
+          context: context,
+        }}
+        className={clsx(
+          withBaseName(),
+          withBaseName(position),
+          {
+            [withBaseName("enterAnimation")]: open,
+            [withBaseName("exitAnimation")]: !open,
+            [withBaseName(variant)]: variant,
+          },
+          className
+        )}
+        onAnimationEnd={() => {
+          if (!open && showComponent) {
+            console.log("onAnimationEnd");
+            setShowComponent(false);
+          }
+        }}
+        {...getDrawerProps()}
+        {...rest}
+      >
+        {children}
+      </FloatingComponent>
+    </Scrim>
   );
 });

@@ -11,6 +11,8 @@
   z-index: var(--salt-zIndex-drawer);
   position: fixed;
   top: 0;
+  min-width: calc(2 * var(--salt-spacing-300) + var(--salt-size-base));
+  min-height: calc(2 * var(--salt-spacing-300) + var(--salt-size-base));
 }
 
 .saltButton-secondary.saltDrawer-closeButton {
