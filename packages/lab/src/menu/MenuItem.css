@@ -10,14 +10,14 @@
   gap: var(--salt-spacing-100);
   position: relative;
   align-items: center;
-  margin-top: var(--salt-size-border);
-  margin-bottom: var(--salt-size-border);
-  border: var(--salt-size-border) var(--salt-container-borderStyle) transparent;
+  border-top: var(--salt-size-border) var(--salt-container-borderStyle) transparent;
+  border-bottom: var(--salt-size-border) var(--salt-container-borderStyle) transparent;
   cursor: var(--salt-selectable-cursor-hover);
 }
 
 .saltMenuItem-active {
   background: var(--salt-selectable-background-hover);
+  border-color: var(--salt-selectable-borderColor-selected);
 }
 
 .saltMenuItem-focusVisible {
@@ -29,7 +29,8 @@
   background: var(--salt-selectable-background-hover);
 }
 
-.saltMenuItem[aria-selected="true"] {
+.saltMenuItem-selected,
+.saltMenuItem-selected:hover {
   background: var(--salt-selectable-background-selected);
   border-color: var(--salt-selectable-borderColor-selected);
 }

@@ -1,22 +1,22 @@
-import { cloneElement, isValidElement, ReactNode, MouseEvent } from "react";
+import {
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  MouseEvent,
+  ComponentPropsWithoutRef
+} from "react";
 import { mergeProps, useForkRef } from "@salt-ds/core";
 import { useMenuContext } from "./MenuContext";
-import { MenuTriggerContext } from "./MenuTriggerContext";
 
-export interface MenuTriggerProps {
-  children?: ReactNode;
-}
-
-export function MenuTrigger(props: MenuTriggerProps) {
+export const MenuTrigger = forwardRef<
+  HTMLDivElement,
+  ComponentPropsWithoutRef<"div">
+>(function MenuTrigger(props, ref) {
   const { children } = props;
 
-  const { refs, setOpen, openState, submenu, activeState } = useMenuContext();
+  const { refs, setOpen, openState } = useMenuContext();
 
-  const triggerRef = useForkRef(
-    // @ts-ignore
-    isValidElement(children) ? children.ref : null,
-    refs.setReference
-  );
+  const triggerRef = useForkRef(ref, refs.setReference);
 
   if (!children || !isValidElement(children)) {
     // Should we log or throw error?
@@ -27,22 +27,13 @@ export function MenuTrigger(props: MenuTriggerProps) {
     setOpen(event, !openState);
   };
 
-  const handleHover = (event: MouseEvent) => {
-    setOpen(event, true);
-  };
-
-  return (
-    <MenuTriggerContext.Provider value={submenu}>
-      {cloneElement(children, {
-        ...mergeProps(
-          {
-            onClick: !submenu ? handleClick : undefined,
-            onMouseOver: submenu ? handleHover : undefined,
-          },
-          children.props
-        ),
-        ref: triggerRef,
-      })}
-    </MenuTriggerContext.Provider>
-  );
-}
+  return cloneElement(children, {
+    ...mergeProps(
+      {
+        onClick: handleClick,
+      },
+      children.props
+    ),
+    ref: triggerRef,
+  })
+});

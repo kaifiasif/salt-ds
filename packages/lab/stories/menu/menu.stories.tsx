@@ -1,5 +1,5 @@
-import { Button, Text } from "@salt-ds/core";
-import { Menu, MenuItem, MenuPanel, MenuTrigger } from "@salt-ds/lab";
+import { Button } from "@salt-ds/core";
+import { Menu, MenuItem, MenuPanel, MenuTrigger, MenuProps } from "@salt-ds/lab";
 
 import { Meta, StoryFn } from "@storybook/react";
 
@@ -8,7 +8,7 @@ export default {
   component: Menu,
 } as Meta<typeof Menu>;
 
-export const Default = () => {
+export const Default: StoryFn<MenuProps> = () => {
   return (
     <Menu>
       <MenuTrigger>
@@ -24,25 +24,9 @@ export const Default = () => {
   );
 };
 
-function Submenu() {
+export const Open: StoryFn<MenuProps> = () => {
   return (
-    <Menu>
-      <MenuTrigger>
-        <MenuItem>Four</MenuItem>
-      </MenuTrigger>
-      <MenuPanel>
-        <MenuItem>One</MenuItem>
-        <MenuItem>Two</MenuItem>
-        <MenuItem>Three</MenuItem>
-        <Submenu />
-      </MenuPanel>
-    </Menu>
-  );
-}
-
-export const Nested = () => {
-  return (
-    <Menu>
+    <Menu defaultOpen>
       <MenuTrigger>
         <Button>Click</Button>
       </MenuTrigger>
@@ -50,7 +34,7 @@ export const Nested = () => {
         <MenuItem>One</MenuItem>
         <MenuItem>Two</MenuItem>
         <MenuItem>Three</MenuItem>
-        <Submenu />
+        <MenuItem>Four</MenuItem>
       </MenuPanel>
     </Menu>
   );

@@ -4,15 +4,16 @@ import {
   forwardRef,
   SyntheticEvent,
   useMemo,
-  useState,
+  // useState,
 } from "react";
-import { MenuContext, useMenuContext } from "./MenuContext";
+import { MenuContext } from "./MenuContext";
 import { useControlled, useFloatingUI } from "@salt-ds/core";
-import { flip, offset, shift, limitShift } from "@floating-ui/react";
+import { flip, offset, shift, limitShift, Placement } from "@floating-ui/react";
 
 export interface MenuProps extends ComponentPropsWithoutRef<"div"> {
   open?: boolean;
   defaultOpen?: boolean;
+  placement?: Placement;
   onOpenChange?: (event: SyntheticEvent, newOpen: boolean) => void;
 }
 
@@ -20,8 +21,15 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
   props,
   ref
 ) {
-  const { children, defaultOpen, open, onOpenChange, ...rest } = props;
-  const { submenu } = useMenuContext();
+  const {
+    children,
+    defaultOpen,
+    open,
+    placement = "top-start",
+    onOpenChange,
+    ...rest
+  } = props;
+  // const { submenu } = useMenuContext();
 
   const [openState, setOpenState] = useControlled({
     controlled: open,
@@ -35,21 +43,21 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
     onOpenChange?.(event, newOpen);
   };
 
-  const [activeState, setActiveState] = useState<string | undefined>(undefined);
+  // const [activeState, setActiveState] = useState<string | undefined>(undefined);
 
-  const setActive = (id?: string) => {
-    if (id) {
-      setActiveState(id);
-    } else {
-      setActiveState(undefined);
-    }
-  };
+  // const setActive = (id?: string) => {
+  //   if (id) {
+  //     setActiveState(id);
+  //   } else {
+  //     setActiveState(undefined);
+  //   }
+  // };
 
-  const hasParent = submenu !== undefined;
+  // const hasParent = submenu !== undefined;
 
   const { x, y, strategy, elements, refs } = useFloatingUI({
     open,
-    placement: hasParent ? "right-start" : "bottom-start",
+    placement, //: hasParent ? "right-start" : "bottom-start",
     middleware: [offset(0), flip({}), shift({ limiter: limitShift() })],
   });
 
@@ -66,9 +74,9 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
         setOpen,
         floatingStyles,
         refs,
-        submenu: hasParent,
-        activeState,
-        setActive,
+        // submenu: hasParent,
+        // activeState,
+        // setActive,
       }}
     >
       <div ref={ref} {...rest}>

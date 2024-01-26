@@ -8,9 +8,9 @@ export interface MenuContextValue {
   setOpen: (event: SyntheticEvent, newOpen: boolean) => void;
   floatingStyles: CSSProperties;
   refs: FloatingReturn["refs"];
-  submenu: boolean | undefined;
-  activeState?: string;
-  setActive: (option?: string) => void;
+  // submenu?: boolean | undefined;
+  // activeState?: string;
+  // setActive: (option?: string) => void;
 }
 
 export const MenuContext = createContext<MenuContextValue>("MenuContext", {
@@ -20,18 +20,18 @@ export const MenuContext = createContext<MenuContextValue>("MenuContext", {
   },
   floatingStyles: {},
   refs: {} as FloatingReturn["refs"],
-  submenu: undefined,
-  activeState: undefined,
-  setActive() {
-    return undefined;
-  },
+  // submenu: undefined,
+  // activeState: undefined,
+  // setActive() {
+  //   return undefined;
+  // },
 });
 
 export function useMenuContext() {
   return useContext(MenuContext);
 }
 
-export function useIsSubmenu() {
-  const context = useMenuContext();
-  return context.submenu === true;
-}
+// export function useIsSubmenu() {
+//   const context = useMenuContext();
+//   return context.submenu === true;
+// }

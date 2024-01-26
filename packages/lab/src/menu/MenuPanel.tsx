@@ -6,11 +6,9 @@ import { useWindow } from "@salt-ds/window";
 import { useComponentCssInjection } from "@salt-ds/styles";
 import menuPanelCss from "./MenuPanel.css";
 
-export interface MenuPanelProps extends ComponentPropsWithoutRef<"div"> {}
-
 const withBaseName = makePrefixer("saltMenuPanel");
 
-export const MenuPanel = forwardRef<HTMLDivElement, MenuPanelProps>(
+export const MenuPanel = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
   function MenuPanel(props, ref) {
     const { children, className, style, ...rest } = props;
 
