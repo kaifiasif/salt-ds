@@ -1,5 +1,11 @@
 import { Button } from "@salt-ds/core";
-import { Menu, MenuItem, MenuPanel, MenuTrigger, MenuProps } from "@salt-ds/lab";
+import {
+  Menu,
+  MenuItem,
+  MenuPanel,
+  MenuTrigger,
+  MenuProps,
+} from "@salt-ds/lab";
 
 import { Meta, StoryFn } from "@storybook/react";
 
@@ -33,6 +39,22 @@ export const Open: StoryFn<MenuProps> = () => {
       <MenuPanel>
         <MenuItem>One</MenuItem>
         <MenuItem>Two</MenuItem>
+        <MenuItem>Three</MenuItem>
+        <MenuItem>Four</MenuItem>
+      </MenuPanel>
+    </Menu>
+  );
+};
+
+export const DisabledItem: StoryFn<MenuProps> = () => {
+  return (
+    <Menu defaultOpen>
+      <MenuTrigger>
+        <Button>Click</Button>
+      </MenuTrigger>
+      <MenuPanel>
+        <MenuItem>One</MenuItem>
+        <MenuItem disabled>Two</MenuItem>
         <MenuItem>Three</MenuItem>
         <MenuItem>Four</MenuItem>
       </MenuPanel>

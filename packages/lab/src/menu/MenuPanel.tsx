@@ -8,33 +8,34 @@ import menuPanelCss from "./MenuPanel.css";
 
 const withBaseName = makePrefixer("saltMenuPanel");
 
-export const MenuPanel = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
-  function MenuPanel(props, ref) {
-    const { children, className, style, ...rest } = props;
+export const MenuPanel = forwardRef<
+  HTMLDivElement,
+  ComponentPropsWithoutRef<"div">
+>(function MenuPanel(props, ref) {
+  const { children, className, style, ...rest } = props;
 
-    const targetWindow = useWindow();
-    useComponentCssInjection({
-      testId: "salt-menu-panel",
-      css: menuPanelCss,
-      window: targetWindow,
-    });
+  const targetWindow = useWindow();
+  useComponentCssInjection({
+    testId: "salt-menu-panel",
+    css: menuPanelCss,
+    window: targetWindow,
+  });
 
-    const { Component: FloatingComponent } = useFloatingComponent();
+  const { Component: FloatingComponent } = useFloatingComponent();
 
-    const { openState, refs, floatingStyles } = useMenuContext();
+  const { openState, refs, floatingStyles } = useMenuContext();
 
-    const handleRef = useForkRef(refs.setFloating, ref);
+  const handleRef = useForkRef(refs.setFloating, ref);
 
-    return (
-      <FloatingComponent
-        open={openState}
-        ref={handleRef}
-        style={{ ...floatingStyles, ...style }}
-        className={clsx(withBaseName(), className)}
-        {...rest}
-      >
-        {children}
-      </FloatingComponent>
-    );
-  }
-);
+  return (
+    <FloatingComponent
+      open={openState}
+      ref={handleRef}
+      style={{ ...floatingStyles, ...style }}
+      className={clsx(withBaseName(), className)}
+      {...rest}
+    >
+      {children}
+    </FloatingComponent>
+  );
+});

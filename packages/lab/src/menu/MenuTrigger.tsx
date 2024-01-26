@@ -3,7 +3,7 @@ import {
   forwardRef,
   isValidElement,
   MouseEvent,
-  ComponentPropsWithoutRef
+  ComponentPropsWithoutRef,
 } from "react";
 import { mergeProps, useForkRef } from "@salt-ds/core";
 import { useMenuContext } from "./MenuContext";
@@ -35,5 +35,5 @@ export const MenuTrigger = forwardRef<
       children.props
     ),
     ref: triggerRef,
-  })
+  });
 });

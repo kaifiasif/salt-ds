@@ -25,7 +25,7 @@
   outline-offset: calc(var(--salt-size-border) * -2);
 }
 
-.saltMenuItem:hover {
+.saltMenuItem:not(.saltMenuItem-disabled):hover {
   background: var(--salt-selectable-background-hover);
 }
 
@@ -35,8 +35,9 @@
   border-color: var(--salt-selectable-borderColor-selected);
 }
 
-.saltMenuItem[aria-disabled="true"] {
+.saltMenuItem-disabled {
   color: var(--salt-text-primary-foreground-disabled);
+  cursor: var(--salt-selectable-cursor-disabled);
 }
 
 .saltMenuItem-expandIcon {
