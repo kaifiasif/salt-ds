@@ -13,6 +13,10 @@ Use a drawer to reveal additional functionality or information that is contextua
 
 Salt's drawer is always modal. When open, the drawer displays a visual overlay, also known as a [`Scrim`](/salt/components/scrim), over the underlying content.
 
+#### Best practices
+
+- To allow screen readers to correctly identify `Drawer`'s header and content respectively, add the prop `id="YOUR-OVERLAY-ID-header"` to your drawer header or title, and prop `id="YOUR-OVERLAY-ID-content"` to your drawer content or description.
+
 ### When to use
 
 - When you need additional content, such as a form or sidebar navigation, to be displayed in a specific area of the screen.
