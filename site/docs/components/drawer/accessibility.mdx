@@ -9,31 +9,33 @@ data:
 
 ### Best practices
 
-You can customize or disable the animations using the `prefers-reduced-motion` CSS media feature.
+- When open, drawer's close button (if present) or the first interactive element always receives initial focus.
 
 ### Keyboard interactions
 
 <KeyboardControls>
 <KeyboardControl keyOrCombos="Enter / Space">
 
-- This action activates the trigger/disclosure button if it is in focus, controlling the visibility of the drawer.
-- In closed state: The trigger is a user-defined content element. Drawer opens and focus is set to first focusable element in the Drawer.
-- In open state: The trigger is the Drawer's 'X' button. Drawer closes and focus returns to content element trigger.
+- If focus is on the trigger element, this action activates the element and opens drawer. Focus remains within the drawer content.
+- If focus is on close button, this action closes the drawer. Focus returns to trigger element.
+- If focus is in the drawer, this action closes the drawer if a content element is configured to close the overlay when activated.
 
 </KeyboardControl>
 <KeyboardControl keyOrCombos="Tab">
 
-- Tab moves focus on to the next focusable element in the drawer. When focus is on the last element in the drawer, it moves focus to first focusable element in the drawer.
+- If focus is on close button, Tab moves focus through focusable content elements in drawer.
+- If focus is on the last element in the overlay content, Tab wraps focus to the close button. Focus does not leave the drawer.
 
 </KeyboardControl>
 <KeyboardControl keyOrCombos="Shift + Tab">
 
-- This action moves focus to the previous focusable element in the drawer. When focus is on the first element in a drawer, it moves focus to last focusable element in the drawer.
+- If focus is on close button, this action moves focus to last focusable content element in the drawer.
+- If focus is on the first interactive element in the drawer, this action wraps focus to the close button. Focus does not leave the drawer.
 
 </KeyboardControl>
 <KeyboardControl keyOrCombos="Escape">
 
-- Escape closes the drawer and returns focus to the trigger button.
+- If focus is in the drawer, Escape closes the drawer and returns focus to trigger element.
 
 </KeyboardControl>
 </KeyboardControls>

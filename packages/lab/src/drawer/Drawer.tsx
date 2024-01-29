@@ -78,7 +78,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
   });
 
   const { getFloatingProps } = useInteractions([
-    useRole(context),
+    useRole(context, { role: "dialog" }),
     useClick(context),
     useDismiss(context),
   ]);
@@ -123,7 +123,6 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
         )}
         onAnimationEnd={() => {
           if (!open && showComponent) {
-            console.log("onAnimationEnd");
             setShowComponent(false);
           }
         }}
