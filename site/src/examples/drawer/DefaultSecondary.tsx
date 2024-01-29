@@ -1,38 +1,36 @@
 import { ReactElement, useState } from "react";
 
-import { Drawer, useDrawer } from "@salt-ds/lab";
+import { Drawer, DrawerCloseButton } from "@salt-ds/lab";
 import { Button } from "@salt-ds/core";
-import { CloseIcon } from "@salt-ds/icons";
-import styles from "./index.module.css";
 
-export const RightPositioned = (): ReactElement => {
+export const DefaultSecondary = (): ReactElement => {
   const [open, setOpen] = useState(false);
+  const id = "default-drawer";
 
-  const hide = () => setOpen(false);
+  const handleRequestOpen = () => {
+    setOpen(true);
+  };
 
-  const { getReferenceProps, getFloatingProps } = useDrawer({
-    open,
-    onOpenChange: setOpen,
-  });
+  const onOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
-      <Button {...getReferenceProps()}>Open Drawer</Button>
+      <Button onClick={handleRequestOpen}>Open Drawer</Button>
       <Drawer
         open={open}
-        onOpenChange={setOpen}
-        {...getFloatingProps()}
-        position="right"
+        onOpenChange={onOpenChange}
+        id={id}
+        variant="secondary"
       >
-        <Button
-          onClick={hide}
-          variant="secondary"
-          className={styles.closeButton}
-        >
-          <CloseIcon />
-        </Button>
-        <h2 id="drawer_label">Lorem ipsum</h2>
-        <p id="drawer_description">
+        <h2 id={`${id}-header`}>Lorem ipsum</h2>
+        <DrawerCloseButton onClick={handleClose} />
+        <p id={`${id}-content`}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nunc
           lacus, scelerisque ut elit nec, commodo blandit est. Duis mollis dui
           at nisl faucibus, id maximus urna pellentesque. Praesent consequat
