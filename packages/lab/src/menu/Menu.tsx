@@ -25,7 +25,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
     children,
     defaultOpen,
     open,
-    placement = "top-start",
+    placement = "bottom-start",
     onOpenChange,
     ...rest
   } = props;

@@ -68,6 +68,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         role="menuitem"
         onMouseDown={handleMouseDown}
         onClick={handleClick}
+        tabIndex={0}
         {...rest}
       >
         {children}

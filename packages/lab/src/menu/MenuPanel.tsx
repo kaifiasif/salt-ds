@@ -1,10 +1,11 @@
-import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, forwardRef, Ref } from "react";
 import { makePrefixer, useFloatingComponent, useForkRef } from "@salt-ds/core";
 import { clsx } from "clsx";
 import { useMenuContext } from "./MenuContext";
 import { useWindow } from "@salt-ds/window";
 import { useComponentCssInjection } from "@salt-ds/styles";
 import menuPanelCss from "./MenuPanel.css";
+import { FloatingOverlay } from "@floating-ui/react";
 
 const withBaseName = makePrefixer("saltMenuPanel");
 
@@ -28,6 +29,7 @@ export const MenuPanel = forwardRef<
   const handleRef = useForkRef(refs.setFloating, ref);
 
   return (
+    <FloatingOverlay>
     <FloatingComponent
       open={openState}
       ref={handleRef}
@@ -37,5 +39,6 @@ export const MenuPanel = forwardRef<
     >
       {children}
     </FloatingComponent>
+    </FloatingOverlay>
   );
 });
