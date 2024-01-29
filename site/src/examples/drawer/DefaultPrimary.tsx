@@ -3,7 +3,7 @@ import { ReactElement, useState } from "react";
 import { Drawer, DrawerCloseButton } from "@salt-ds/lab";
 import { Button } from "@salt-ds/core";
 
-export const Default = (): ReactElement => {
+export const DefaultPrimary = (): ReactElement => {
   const [open, setOpen] = useState(false);
   const id = "default-drawer";
 
