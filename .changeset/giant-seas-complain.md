@@ -2,7 +2,7 @@
 "@salt-ds/lab": minor
 ---
 
-- Refactored Drawer to use floating-ui and Salt's `Scrim`.
+- Refactored `Drawer` to use floating-ui and Salt's `Scrim`.
 - Added optional `DrawerCloseButton`.
 - Implemented desktop support.
 
