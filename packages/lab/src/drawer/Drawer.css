@@ -11,8 +11,6 @@
   z-index: var(--salt-zIndex-drawer);
   position: fixed;
   top: 0;
-  min-width: calc(2 * var(--salt-spacing-300) + var(--salt-size-base));
-  min-height: calc(2 * var(--salt-spacing-300) + var(--salt-size-base));
 }
 
 /* Styles applied when variant = "primary" */
@@ -40,12 +38,6 @@
 /* Styles applied when position = "top" and the component unmounts */
 .saltDrawer-top.saltDrawer-exitAnimation {
   animation: slide-out-bottom var(--salt-duration-perceptible) ease-in-out both;
-}
-
-/* Styles applied when position = "right" or position = "left" */
-.saltDrawer-right,
-.saltDrawer-left {
-  width: calc(10 * var(--salt-size-base));
 }
 
 /* Styles applied when position = "right" */

@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { ChangeEvent, SyntheticEvent, useState } from "react";
 import {
   Button,
+  Card,
+  Checkbox,
   FlexItem,
   FlexLayout,
   FlowLayout,
@@ -10,41 +12,14 @@ import {
   Input,
   StackLayout,
 } from "@salt-ds/core";
-import { Drawer, DrawerCloseButton } from "@salt-ds/lab";
+import { ComboBoxNext, Option, Drawer, DrawerCloseButton } from "@salt-ds/lab";
 import { Meta, StoryFn } from "@storybook/react";
-import "./drawer.stories.css";
+import { MultipleCards } from "@salt-ds/site/src/examples/card";
 
 export default {
   title: "Lab/Drawer",
   component: Drawer,
 } as Meta<typeof Drawer>;
-
-const DrawerContent = ({
-  id,
-  handleClose,
-}: {
-  id?: string;
-  handleClose: () => void;
-}) => (
-  <>
-    <h2 id={`${id}-header`}>Lorem ipsum</h2>
-    <DrawerCloseButton onClick={handleClose} />
-    <p id={`${id}-content`}>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nunc lacus,
-      scelerisque ut elit nec, commodo blandit est. Duis mollis dui at nisl
-      faucibus, id maximus urna pellentesque. Praesent consequat vulputate
-      dolor, a mattis metus suscipit vitae. Donec ullamcorper, neque sit amet
-      laoreet ornare, diam eros posuere metus, id consectetur tellus nisl id
-      ipsum. Fusce sit amet cursus mauris, vel scelerisque enim. Quisque eu
-      dolor tortor. Nulla facilisi. Vestibulum at neque sit amet neque facilisis
-      porttitor a ac risus.Mauris consequat sollicitudin commodo. Vestibulum ac
-      diam vulputate, condimentum purus non, eleifend erat. Nunc auctor iaculis
-      mi eu hendrerit. Suspendisse potenti. Cras tristique vehicula iaculis.
-      Morbi faucibus volutpat tellus, sit amet fringilla dui rhoncus a.
-      Suspendisse nunc nulla, mattis sed commodo ac, cursus ut augue.
-    </p>
-  </>
-);
 
 const DrawerTemplate: StoryFn<typeof Drawer> = ({
   id,
@@ -75,7 +50,7 @@ const DrawerTemplate: StoryFn<typeof Drawer> = ({
         id={id}
         position={position}
       >
-        <DrawerContent id={id} handleClose={handleClose} />
+        <DrawerCloseButton onClick={handleClose} />
       </Drawer>
     </>
   );
@@ -184,20 +159,7 @@ export const RightFormField = () => {
   );
 };
 
-const ArticleExample = () => (
-  <StackLayout className="drawer-article-container">
-    <div className="drawer-article-image" />
-    <h3>Laborum in sit officia consecte</h3>
-    <p>
-      Do excepteur id ipsum qui dolor irure dolore commodo labore. Minim sunt
-      aliquip eiusmod excepteur qui sunt commodo ex cillum ullamco. Quis magna
-      deserunt reprehenderit anim elit laboris laboris fugiat Lorem est culpa
-      quis.
-    </p>
-  </StackLayout>
-);
-
-export const BottomNoCloseButton = () => {
+export const Bottom = () => {
   const [open, setOpen] = useState(false);
   const id = "bottom-drawer";
 
@@ -221,17 +183,105 @@ export const BottomNoCloseButton = () => {
         onOpenChange={onOpenChange}
         id={id}
         position="bottom"
-        style={{ height: 500 }}
+        style={{ height: 350 }}
       >
+        <DrawerCloseButton onClick={handleClose} />
         <StackLayout>
-          <h2 id={`${id}-header`}>Section title</h2>
-          <FlowLayout id={`${id}-content`}>
-            {Array.from({ length: 3 }, (_, index) => (
-              <ArticleExample key={index} />
-            ))}
+          <h2 id={`${id}-header`}>Bottom drawer with master detail layout</h2>
+          <FlowLayout>
+            <MultipleCards />
+            <MultipleCards />
+            <MultipleCards />
           </FlowLayout>
           <FlexItem align="end">
             <Button onClick={handleClose}>Close Drawer</Button>
+          </FlexItem>
+        </StackLayout>
+      </Drawer>
+    </>
+  );
+};
+
+export const OptionalCloseButton = () => {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+
+  const id = "right-drawer";
+  const postcodes = ["05011", "01050", "03040", "11050"];
+
+  const handleRequestOpen = () => {
+    setOpen(true);
+  };
+
+  const onOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setValue(value);
+  };
+
+  const handleSelectionChange = (
+    event: SyntheticEvent,
+    newSelected: string[]
+  ) => {
+    return newSelected.length === 1 ? setValue(newSelected[0]) : setValue("");
+  };
+
+  return (
+    <>
+      <Button onClick={handleRequestOpen}>Open Drawer</Button>
+      <Drawer
+        open={open}
+        onOpenChange={onOpenChange}
+        id={id}
+        position="right"
+        style={{ width: 500 }}
+      >
+        <StackLayout>
+          <h2>Add your delivery details</h2>
+          <FormField>
+            <FormFieldLabel>House no.</FormFieldLabel>
+            <Input />
+          </FormField>
+          <FormField>
+            <FormFieldLabel>Street name</FormFieldLabel>
+            <Input />
+          </FormField>
+          <FormField>
+            <FormFieldLabel>Postcode</FormFieldLabel>
+            <ComboBoxNext
+              onChange={handleChange}
+              onSelectionChange={handleSelectionChange}
+              value={value}
+              placeholder="Search for your postcode"
+            >
+              {postcodes.map((postcode) => (
+                <Option value={postcode} key={postcode}>
+                  {postcode}
+                </Option>
+              ))}
+            </ComboBoxNext>
+            <FormFieldHelperText>Do not include space</FormFieldHelperText>
+          </FormField>
+          <FormField>
+            <FormFieldLabel>City/Town</FormFieldLabel>
+            <Input />
+          </FormField>
+          <FormField>
+            <FormFieldLabel>Country</FormFieldLabel>
+            <Input />
+          </FormField>
+          <FormField>
+            <Checkbox label="Dog(s) present at my property" />
+          </FormField>
+          <FlexItem align="end">
+            <Button onClick={handleClose}>Submit</Button>
           </FlexItem>
         </StackLayout>
       </Drawer>
