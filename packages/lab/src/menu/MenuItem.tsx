@@ -2,11 +2,10 @@ import {
   ComponentPropsWithoutRef,
   forwardRef,
   ReactEventHandler,
-  Ref,
   SyntheticEvent,
   useState,
 } from "react";
-import { makePrefixer, useForkRef } from "@salt-ds/core";
+import { makePrefixer } from "@salt-ds/core";
 import { clsx } from "clsx";
 import { useWindow } from "@salt-ds/window";
 import { useComponentCssInjection } from "@salt-ds/styles";
@@ -28,7 +27,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       props;
     const [selected, setSelected] = useState<boolean>();
 
-    const { refs, setOpen } = useMenuContext();
+    const { setOpen } = useMenuContext();
 
     const targetWindow = useWindow();
     useComponentCssInjection({
@@ -37,7 +36,6 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       window: targetWindow,
     });
 
-    const handleRef = useForkRef(refs.setFloating, ref);
 
     const handleMouseDown = (event: SyntheticEvent) => {
       if (disabled) {
@@ -64,11 +62,10 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
           },
           className
         )}
-        ref={handleRef as Ref<HTMLDivElement>}
+        ref={ref}
         role="menuitem"
         onMouseDown={handleMouseDown}
         onClick={handleClick}
-        tabIndex={0}
         {...rest}
       >
         {children}

@@ -74,6 +74,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
         setOpen,
         floatingStyles,
         refs,
+        placement
         // submenu: hasParent,
         // activeState,
         // setActive,

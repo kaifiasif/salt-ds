@@ -9,7 +9,7 @@ import { mergeProps, useForkRef } from "@salt-ds/core";
 import { useMenuContext } from "./MenuContext";
 
 export const MenuTrigger = forwardRef<
-  HTMLDivElement,
+  HTMLElement,
   ComponentPropsWithoutRef<"div">
 >(function MenuTrigger(props, ref) {
   const { children } = props;
@@ -19,8 +19,7 @@ export const MenuTrigger = forwardRef<
   const triggerRef = useForkRef(ref, refs.setReference);
 
   if (!children || !isValidElement(children)) {
-    // Should we log or throw error?
-    return children;
+    return <></>;
   }
 
   const handleClick = (event: MouseEvent) => {
