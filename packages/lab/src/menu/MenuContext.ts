@@ -1,7 +1,4 @@
-import {
-  Placement,
-  Strategy,
-} from "@floating-ui/react";
+import { Placement, Strategy } from "@floating-ui/react";
 import { createContext, useFloatingUI } from "@salt-ds/core";
 import { CSSProperties, SyntheticEvent, useContext } from "react";
 
@@ -31,7 +28,7 @@ export const MenuContext = createContext<MenuContextValue>("MenuContext", {
     left: 0,
     position: "" as Strategy,
   },
-  placement: 'bottom-start',
+  placement: "bottom-start",
   refs: {} as FloatingReturn["refs"],
   getFloatingProps() {
     return {} as Record<string, unknown>;

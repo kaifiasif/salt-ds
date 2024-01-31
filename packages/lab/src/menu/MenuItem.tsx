@@ -36,7 +36,6 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       window: targetWindow,
     });
 
-
     const handleMouseDown = (event: SyntheticEvent) => {
       if (disabled) {
         return;

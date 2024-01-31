@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, forwardRef, RefObject } from "react";
 import { makePrefixer, useFloatingComponent, useForkRef } from "@salt-ds/core";
 import { clsx } from "clsx";
 import { useMenuContext } from "./MenuContext";
@@ -29,12 +29,14 @@ export const MenuPanel = forwardRef<
 
   return (
     <FloatingComponent
+      top={0}
+      left={0}
+      position={"absolute"}
       open={openState}
-      ref={handleRef}
+      ref={handleRef as RefObject<HTMLDivElement>}
       style={{ ...floatingStyles, ...style }}
       className={clsx(withBaseName(), className)}
-      {...rest}
-    // {...getFloatingProps()}
+      {...rest} // {...getFloatingProps()}
     >
       {children}
     </FloatingComponent>
