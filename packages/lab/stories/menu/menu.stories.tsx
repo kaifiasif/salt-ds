@@ -5,6 +5,7 @@ import {
   MenuPanel,
   MenuTrigger,
   MenuProps,
+  MenuGroup
 } from "@salt-ds/lab";
 
 import { Meta, StoryFn } from "@storybook/react";
@@ -23,8 +24,10 @@ export const Default: StoryFn<MenuProps> = () => {
       <MenuPanel>
         <MenuItem>One</MenuItem>
         <MenuItem>Two</MenuItem>
-        <MenuItem>Three</MenuItem>
-        <MenuItem>Four</MenuItem>
+        <MenuGroup>
+          <MenuItem>Three</MenuItem>
+          <MenuItem>Four</MenuItem>
+        </MenuGroup>
       </MenuPanel>
     </Menu>
   );
