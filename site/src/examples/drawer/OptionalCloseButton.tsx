@@ -9,13 +9,13 @@ import {
   FormFieldLabel,
   Input,
   StackLayout,
+  H2,
 } from "@salt-ds/core";
 
 export const OptionalCloseButton = (): ReactElement => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
-  const id = "right-drawer";
   const postcodes = ["05011", "01050", "03040", "11050"];
 
   const handleRequestOpen = () => {
@@ -48,12 +48,12 @@ export const OptionalCloseButton = (): ReactElement => {
       <Drawer
         open={open}
         onOpenChange={onOpenChange}
-        id={id}
         position="right"
         style={{ width: 500 }}
+        id="right"
       >
         <StackLayout>
-          <h2>Add your delivery details</h2>
+          <H2>Add your delivery details</H2>
           <FormField>
             <FormFieldLabel>House no.</FormFieldLabel>
             <Input />

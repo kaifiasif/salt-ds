@@ -98,7 +98,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
     }
   }, [open, showComponent, setShowComponent]);
 
-  if (!showComponent) return <></>;
+  if (!showComponent) return null;
 
   return (
     <Scrim>
@@ -106,8 +106,6 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
         aria-modal="true"
         open={open}
         ref={handleRef}
-        aria-labelledby={`${id}-header`}
-        aria-describedby={`${id}-content`}
         focusManagerProps={{
           context: context,
         }}
@@ -126,8 +124,8 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
             setShowComponent(false);
           }
         }}
-        {...getDrawerProps()}
         {...rest}
+        {...getDrawerProps()}
       >
         {children}
       </FloatingComponent>

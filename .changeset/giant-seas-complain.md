@@ -9,7 +9,6 @@
 ```tsx
 export const DrawerTemplate = (): ReactElement => {
   const [open, setOpen] = useState(false);
-  const id = "default-drawer";
 
   const handleRequestOpen = () => {
     setOpen(true);
@@ -26,10 +25,10 @@ export const DrawerTemplate = (): ReactElement => {
   return (
     <>
       <Button onClick={handleRequestOpen}>Open Drawer</Button>
-      <Drawer open={open} onOpenChange={onOpenChange} id={id}>
-        <h2 id={`${id}-header`}>Title</h2>
+      <Drawer open={open} onOpenChange={onOpenChange} id="ID">
         <DrawerCloseButton onClick={handleClose} />
-        <p id={`${id}-content`}>Content of drawer</p>
+        <H2>Title</H2>
+        <H4>Content of drawer</H4>
       </Drawer>
     </>
   );

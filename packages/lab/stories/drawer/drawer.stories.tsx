@@ -9,11 +9,13 @@ import {
   FormField,
   FormFieldHelperText,
   FormFieldLabel,
+  H2,
+  H4,
   Input,
   StackLayout,
 } from "@salt-ds/core";
 import { ComboBoxNext, Option, Drawer, DrawerCloseButton } from "@salt-ds/lab";
-import { Meta, StoryFn } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import { MultipleCards } from "@salt-ds/site/src/examples/card";
 
 export default {
@@ -21,50 +23,78 @@ export default {
   component: Drawer,
 } as Meta<typeof Drawer>;
 
-const DrawerTemplate: StoryFn<typeof Drawer> = ({
-  id,
-  position = "left",
-  ...args
-}) => {
-  const [open, setOpen] = useState(false);
-
-  const handleRequestOpen = () => {
-    setOpen(true);
-  };
-
-  const onOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+export const Default = ({ position = "left", ...args }) => {
+  const [openPrimary, setOpenPrimary] = useState(false);
+  const [openSecondary, setOpenSecondary] = useState(false);
 
   return (
-    <>
-      <Button onClick={handleRequestOpen}>Open Drawer</Button>
+    <StackLayout>
+      <Button onClick={() => setOpenPrimary(true)}>Primary Drawer</Button>
       <Drawer
-        {...args}
-        open={open}
-        onOpenChange={onOpenChange}
-        id={id}
-        position={position}
+        open={openPrimary}
+        onOpenChange={(newOpen) => setOpenPrimary(newOpen)}
+        id="primary"
       >
-        <DrawerCloseButton onClick={handleClose} />
+        <DrawerCloseButton onClick={() => setOpenPrimary(false)} />
       </Drawer>
-    </>
+      <Button onClick={() => setOpenSecondary(true)}>Secondary Drawer</Button>
+      <Drawer
+        open={openSecondary}
+        onOpenChange={(newOpen) => setOpenSecondary(newOpen)}
+        variant="secondary"
+        id="secondary"
+      >
+        <DrawerCloseButton onClick={() => setOpenSecondary(false)} />
+      </Drawer>
+    </StackLayout>
   );
 };
 
-export const DefaultPrimary = DrawerTemplate.bind({});
-DefaultPrimary.args = {
-  id: "default-drawer",
-};
+export const Position = ({ position = "left", ...args }) => {
+  const [openLeft, setOpenLeft] = useState(false);
+  const [openRight, setOpenRight] = useState(false);
+  const [openTop, setOpenTop] = useState(false);
+  const [openBottom, setOpenBottom] = useState(false);
 
-export const DefaultSecondary = DrawerTemplate.bind({});
-DefaultSecondary.args = {
-  id: "default-drawer",
-  variant: "secondary",
+  return (
+    <StackLayout>
+      <Button onClick={() => setOpenLeft(true)}>Left Drawer</Button>
+      <Drawer
+        open={openLeft}
+        onOpenChange={(newOpen) => setOpenLeft(newOpen)}
+        id="left"
+      >
+        <DrawerCloseButton onClick={() => setOpenLeft(false)} />
+      </Drawer>
+      <Button onClick={() => setOpenRight(true)}>Right Drawer</Button>
+      <Drawer
+        open={openRight}
+        onOpenChange={(newOpen) => setOpenRight(newOpen)}
+        position="right"
+        id="right"
+      >
+        <DrawerCloseButton onClick={() => setOpenRight(false)} />
+      </Drawer>
+      <Button onClick={() => setOpenTop(true)}>Top Drawer</Button>
+      <Drawer
+        open={openTop}
+        onOpenChange={(newOpen) => setOpenTop(newOpen)}
+        position="top"
+        id="top"
+      >
+        <DrawerCloseButton onClick={() => setOpenTop(false)} />
+      </Drawer>
+      <Button onClick={() => setOpenBottom(true)}>Bottom Drawer</Button>
+      <Drawer
+        open={openBottom}
+        onOpenChange={(newOpen) => setOpenBottom(newOpen)}
+        position="bottom"
+        id="bottom"
+      >
+        <DrawerCloseButton onClick={() => setOpenBottom(false)} />
+      </Drawer>
+    </StackLayout>
+  );
 };
 
 const FormFieldExample = () => (
@@ -75,9 +105,8 @@ const FormFieldExample = () => (
   </FormField>
 );
 
-export const TopFormField = () => {
+export const TopUseCase = () => {
   const [open, setOpen] = useState(false);
-  const id = "top-drawer";
 
   const handleRequestOpen = () => {
     setOpen(true);
@@ -93,17 +122,17 @@ export const TopFormField = () => {
 
   return (
     <>
-      <Button onClick={handleRequestOpen}>Open Drawer</Button>
-      <Drawer open={open} onOpenChange={onOpenChange} id={id} position="top">
+      <Button onClick={handleRequestOpen}>Top Drawer</Button>
+      <Drawer open={open} onOpenChange={onOpenChange} position="top" id="top">
         <StackLayout>
-          <h2 id={`${id}-header`}>Section title</h2>
           <DrawerCloseButton onClick={handleClose} />
-          <p id={`${id}-content`}>
+          <H2>Section title</H2>
+          <H4>
             Incididunt adipisicing deserunt nostrud ullamco consequat
             consectetur magna id do irure labore fugiat. Eiusmod pariatur
             officia elit ad. Ullamco adipisicing Lorem amet velit in do
             reprehenderit nostrud eu aute voluptate quis quis.
-          </p>
+          </H4>
           <FlexLayout>
             {Array.from({ length: 4 }, (_, index) => (
               <FormFieldExample key={index} />
@@ -118,9 +147,8 @@ export const TopFormField = () => {
   );
 };
 
-export const RightFormField = () => {
+export const RightUseCase = () => {
   const [open, setOpen] = useState(false);
-  const id = "right-drawer";
 
   const handleRequestOpen = () => {
     setOpen(true);
@@ -136,17 +164,23 @@ export const RightFormField = () => {
 
   return (
     <>
-      <Button onClick={handleRequestOpen}>Open Drawer</Button>
-      <Drawer open={open} onOpenChange={onOpenChange} id={id} position="right">
+      <Button onClick={handleRequestOpen}>Right Drawer</Button>
+      <Drawer
+        open={open}
+        onOpenChange={onOpenChange}
+        position="right"
+        style={{ width: 500 }}
+        id="right"
+      >
         <StackLayout>
-          <h2 id={`${id}-header`}>Section Title</h2>
           <DrawerCloseButton onClick={handleClose} />
-          <p id={`${id}-content`}>
+          <H2>Section Title</H2>
+          <H4>
             Incididunt adipisicing deserunt nostrud ullamco consequat
             consectetur magna id do irure labore fugiat. Eiusmod pariatur
             officia elit ad. Ullamco adipisicing Lorem amet velit in do
             reprehenderit nostrud eu aute voluptate quis quis.
-          </p>
+          </H4>
           {Array.from({ length: 7 }, (_, index) => (
             <FormFieldExample key={index} />
           ))}
@@ -159,9 +193,8 @@ export const RightFormField = () => {
   );
 };
 
-export const Bottom = () => {
+export const BottomUseCase = () => {
   const [open, setOpen] = useState(false);
-  const id = "bottom-drawer";
 
   const handleRequestOpen = () => {
     setOpen(true);
@@ -177,17 +210,17 @@ export const Bottom = () => {
 
   return (
     <>
-      <Button onClick={handleRequestOpen}>Open Drawer</Button>
+      <Button onClick={handleRequestOpen}>Bottom Drawer</Button>
       <Drawer
         open={open}
         onOpenChange={onOpenChange}
-        id={id}
         position="bottom"
         style={{ height: 350 }}
+        id="bottom"
       >
         <DrawerCloseButton onClick={handleClose} />
         <StackLayout>
-          <h2 id={`${id}-header`}>Bottom drawer with master detail layout</h2>
+          <H2>Bottom drawer with master detail layout</H2>
           <FlowLayout>
             <MultipleCards />
             <MultipleCards />
@@ -206,7 +239,6 @@ export const OptionalCloseButton = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
-  const id = "right-drawer";
   const postcodes = ["05011", "01050", "03040", "11050"];
 
   const handleRequestOpen = () => {
@@ -239,9 +271,9 @@ export const OptionalCloseButton = () => {
       <Drawer
         open={open}
         onOpenChange={onOpenChange}
-        id={id}
         position="right"
         style={{ width: 500 }}
+        id="right"
       >
         <StackLayout>
           <h2>Add your delivery details</h2>

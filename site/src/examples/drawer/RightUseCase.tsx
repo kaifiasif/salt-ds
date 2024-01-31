@@ -9,6 +9,8 @@ import {
   FormFieldLabel,
   Input,
   StackLayout,
+  H2,
+  H4,
 } from "@salt-ds/core";
 
 const FormFieldExample = () => (
@@ -19,9 +21,8 @@ const FormFieldExample = () => (
   </FormField>
 );
 
-export const RightWithFormField = (): ReactElement => {
+export const RightUseCase = (): ReactElement => {
   const [open, setOpen] = useState(false);
-  const id = "right-drawer";
 
   const handleRequestOpen = () => {
     setOpen(true);
@@ -37,17 +38,23 @@ export const RightWithFormField = (): ReactElement => {
 
   return (
     <>
-      <Button onClick={handleRequestOpen}>Open Drawer</Button>
-      <Drawer open={open} onOpenChange={onOpenChange} id={id} position="right">
+      <Button onClick={handleRequestOpen}>Right Drawer</Button>
+      <Drawer
+        open={open}
+        onOpenChange={onOpenChange}
+        position="right"
+        id="right"
+        style={{ width: 500 }}
+      >
         <StackLayout>
-          <h2 id={`${id}-header`}>Section Title</h2>
           <DrawerCloseButton onClick={handleClose} />
-          <p id={`${id}-content`}>
+          <H2>Section Title</H2>
+          <H4>
             Incididunt adipisicing deserunt nostrud ullamco consequat
             consectetur magna id do irure labore fugiat. Eiusmod pariatur
             officia elit ad. Ullamco adipisicing Lorem amet velit in do
             reprehenderit nostrud eu aute voluptate quis quis.
-          </p>
+          </H4>
           {Array.from({ length: 7 }, (_, index) => (
             <FormFieldExample key={index} />
           ))}

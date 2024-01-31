@@ -8,47 +8,44 @@ data:
 ---
 
 <LivePreviewControls>
-<LivePreview componentName="drawer" exampleName="DefaultPrimary" >
 
-### Default primary
+<LivePreview componentName="drawer" exampleName="Default" >
 
-Drawers are by default, anchored to the `left` edge of the screen. You can also place them on the `right`, `top` and `bottom` edges using `position` prop.
+### Default
 
-</LivePreview>
-
-<LivePreview componentName="drawer" exampleName="DefaultSecondary" >
-
-### Default secondary
-
-Set `variant="secondary"` for secondary drawer.
+Drawers are by default `variant="primary"` and positioned to the `left` edge of the screen. Set `variant="secondary"` for secondary drawer.
 
 </LivePreview>
 
-<LivePreview componentName="drawer" exampleName="RightWithFormField" >
+<LivePreview componentName="drawer" exampleName="Position" >
 
-### Right drawer with form field
+### Position
 
-Set `position="right"` to display the drawer component on the right.
+Place drawer on the `left`, `right`, `top` and `bottom` edges using `position` prop.
 
-#### Best practices
+</LivePreview>
+
+<LivePreview componentName="drawer" exampleName="RightUseCase" >
+
+### Right drawer use case
 
 Consider using a right-anchored drawer to show supporting information that’s related to the current context, such as recent events, notifications or quick settings.
 
 </LivePreview>
 
-<LivePreview componentName="drawer" exampleName="TopWithFormField" >
+<LivePreview componentName="drawer" exampleName="TopUseCase" >
 
-### Top drawer with form field
+### Top drawer use case
 
-Set `position="top"` to display the drawer component at the top. Anchor your drawer to the top edge if it will display supporting information that’s related to the current context and is best presented in a horizontal format, e.g., complex filters or a summary panel.
+Anchor your drawer to the top edge if it will display supporting information that’s related to the current context and is best presented in a horizontal format, e.g., complex filters or a summary panel.
 
 </LivePreview>
 
-<LivePreview componentName="drawer" exampleName="Bottom" >
+<LivePreview componentName="drawer" exampleName="BottomUseCase" >
 
-### Bottom drawer with master detail layout
+### Bottom drawer use case
 
-Set `position="bottom"` to display the drawer component at the bottom. The drawer's close button is optional and you can add it as and when desired. Anchor a drawer to the bottom edge of the screen when using a master-detail layout with content, such as graphs, images or comparisons that requires a wider horizontal format.
+Anchor a drawer to the bottom edge of the screen when using a master-detail layout with content, such as graphs, images or comparisons that requires a wider horizontal format.
 
 </LivePreview>
 
@@ -56,7 +53,7 @@ Set `position="bottom"` to display the drawer component at the bottom. The drawe
 
 ### Optional close button
 
-The drawer's close button is optional. It always appear on the top right corner of drawer.
+This example has been configured to close on `Submit` click, instead of closing with drawer's optional close button. When present, close button always appear on the top right corner of drawer.
 
 </LivePreview>
 </LivePreviewControls>
