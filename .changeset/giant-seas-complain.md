@@ -25,7 +25,12 @@ export const DrawerTemplate = (): ReactElement => {
   return (
     <>
       <Button onClick={handleRequestOpen}>Open Drawer</Button>
-      <Drawer open={open} onOpenChange={onOpenChange} id="ID">
+      <Drawer
+        open={open}
+        onOpenChange={onOpenChange}
+        id="ID"
+        style={{ width: 300 }}
+      >
         <DrawerCloseButton onClick={handleClose} />
         <H2>Title</H2>
         <H4>Content of drawer</H4>
