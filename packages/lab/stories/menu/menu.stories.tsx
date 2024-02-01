@@ -50,7 +50,10 @@ export const Controlled: StoryFn<MenuProps> = () => {
         </MenuTrigger>
         <MenuPanel>
           <MenuItem>One</MenuItem>
-          <MenuItem><TailsIcon />Two</MenuItem>
+          <MenuItem>
+            <TailsIcon />
+            Two
+          </MenuItem>
           <MenuGroup label="Group label">
             <MenuItem>Three</MenuItem>
             <MenuItem disabled>Four</MenuItem>
