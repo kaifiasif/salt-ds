@@ -9,6 +9,7 @@ import {
 } from "@salt-ds/lab";
 
 import { Meta, StoryFn } from "@storybook/react";
+import { TailsIcon } from "@salt-ds/icons";
 import { useState } from "react";
 
 export default {
@@ -25,10 +26,8 @@ export const Default: StoryFn<MenuProps> = () => {
       <MenuPanel>
         <MenuItem>One</MenuItem>
         <MenuItem>Two</MenuItem>
-        <MenuGroup>
-          <MenuItem>Three</MenuItem>
-          <MenuItem disabled>Four</MenuItem>
-        </MenuGroup>
+        <MenuItem>Three</MenuItem>
+        <MenuItem>Four</MenuItem>
       </MenuPanel>
     </Menu>
   );
@@ -51,9 +50,11 @@ export const Controlled: StoryFn<MenuProps> = () => {
         </MenuTrigger>
         <MenuPanel>
           <MenuItem>One</MenuItem>
-          <MenuItem>Two</MenuItem>
-          <MenuItem>Three</MenuItem>
-          <MenuItem>Four</MenuItem>
+          <MenuItem><TailsIcon />Two</MenuItem>
+          <MenuGroup label="Group label">
+            <MenuItem>Three</MenuItem>
+            <MenuItem disabled>Four</MenuItem>
+          </MenuGroup>
         </MenuPanel>
       </Menu>
     </FlexLayout>
