@@ -10,7 +10,7 @@ import {
   Input,
   StackLayout,
   H2,
-  H4,
+  Text,
 } from "@salt-ds/core";
 
 const FormFieldExample = () => (
@@ -23,6 +23,7 @@ const FormFieldExample = () => (
 
 export const RightUseCase = (): ReactElement => {
   const [open, setOpen] = useState(false);
+  const id = "right-drawer";
 
   const handleRequestOpen = () => {
     setOpen(true);
@@ -43,18 +44,18 @@ export const RightUseCase = (): ReactElement => {
         open={open}
         onOpenChange={onOpenChange}
         position="right"
-        id="right"
+        id={id}
         style={{ width: 500 }}
       >
         <StackLayout>
           <DrawerCloseButton onClick={handleClose} />
-          <H2>Section Title</H2>
-          <H4>
+          <H2 id={`${id}-header`}>Section Title</H2>
+          <Text>
             Incididunt adipisicing deserunt nostrud ullamco consequat
             consectetur magna id do irure labore fugiat. Eiusmod pariatur
             officia elit ad. Ullamco adipisicing Lorem amet velit in do
             reprehenderit nostrud eu aute voluptate quis quis.
-          </H4>
+          </Text>
           {Array.from({ length: 7 }, (_, index) => (
             <FormFieldExample key={index} />
           ))}

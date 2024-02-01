@@ -6,6 +6,7 @@ import { MultipleCards } from "../card";
 
 export const BottomUseCase = (): ReactElement => {
   const [open, setOpen] = useState(false);
+  const id = "bottom-drawer";
 
   const handleRequestOpen = () => {
     setOpen(true);
@@ -27,11 +28,11 @@ export const BottomUseCase = (): ReactElement => {
         onOpenChange={onOpenChange}
         position="bottom"
         style={{ height: 350 }}
-        id="bottom"
+        id={id}
       >
         <DrawerCloseButton onClick={handleClose} />
         <StackLayout>
-          <H2>Bottom drawer use case</H2>
+          <H2 id={`${id}-header`}>Bottom drawer use case</H2>
           <FlowLayout>
             <MultipleCards />
             <MultipleCards />

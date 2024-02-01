@@ -17,6 +17,7 @@ export const OptionalCloseButton = (): ReactElement => {
   const [value, setValue] = useState("");
 
   const postcodes = ["05011", "01050", "03040", "11050"];
+  const id = "right-drawer";
 
   const handleRequestOpen = () => {
     setOpen(true);
@@ -39,7 +40,7 @@ export const OptionalCloseButton = (): ReactElement => {
     event: SyntheticEvent,
     newSelected: string[]
   ) => {
-    return newSelected.length === 1 ? setValue(newSelected[0]) : setValue("");
+    setValue(newSelected.length === 1 ? newSelected[0] : "");
   };
 
   return (
@@ -50,10 +51,10 @@ export const OptionalCloseButton = (): ReactElement => {
         onOpenChange={onOpenChange}
         position="right"
         style={{ width: 500 }}
-        id="right"
+        id={id}
       >
         <StackLayout>
-          <H2>Add your delivery details</H2>
+          <H2 id={`${id}-header`}>Add your delivery details</H2>
           <FormField>
             <FormFieldLabel>House no.</FormFieldLabel>
             <Input />
@@ -68,7 +69,7 @@ export const OptionalCloseButton = (): ReactElement => {
               onChange={handleChange}
               onSelectionChange={handleSelectionChange}
               value={value}
-              placeholder="Search for your postcode"
+              placeholder="Postcode"
             >
               {postcodes.map((postcode) => (
                 <Option value={postcode} key={postcode}>

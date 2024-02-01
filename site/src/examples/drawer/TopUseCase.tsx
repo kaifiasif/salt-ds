@@ -9,7 +9,7 @@ import {
   FormFieldHelperText,
   FormFieldLabel,
   H2,
-  H4,
+  Text,
   Input,
   StackLayout,
 } from "@salt-ds/core";
@@ -24,6 +24,7 @@ const FormFieldExample = () => (
 
 export const TopUseCase = (): ReactElement => {
   const [open, setOpen] = useState(false);
+  const id = "top-drawer";
 
   const handleRequestOpen = () => {
     setOpen(true);
@@ -40,16 +41,16 @@ export const TopUseCase = (): ReactElement => {
   return (
     <>
       <Button onClick={handleRequestOpen}>Top Drawer</Button>
-      <Drawer open={open} onOpenChange={onOpenChange} position="top" id="top">
+      <Drawer open={open} onOpenChange={onOpenChange} position="top" id={id}>
         <StackLayout>
           <DrawerCloseButton onClick={handleClose} />
-          <H2>Section title</H2>
-          <H4>
+          <H2 id={`${id}-header`}>Section title</H2>
+          <Text>
             Incididunt adipisicing deserunt nostrud ullamco consequat
             consectetur magna id do irure labore fugiat. Eiusmod pariatur
             officia elit ad. Ullamco adipisicing Lorem amet velit in do
             reprehenderit nostrud eu aute voluptate quis quis.
-          </H4>
+          </Text>
           <FlexLayout>
             {Array.from({ length: 4 }, (_, index) => (
               <FormFieldExample key={index} />

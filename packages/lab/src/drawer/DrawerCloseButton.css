@@ -1,5 +1,11 @@
+.saltDrawerCloseButton-container {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: calc(var(--salt-spacing-300) * -1);
+  margin-right: calc(var(--salt-spacing-300) * -1);
+}
+
 .saltButton-secondary.saltDrawerCloseButton {
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: fixed;
 }

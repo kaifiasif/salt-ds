@@ -16,6 +16,7 @@ export const Position = (): ReactElement => {
         open={openLeft}
         onOpenChange={(newOpen) => setOpenLeft(newOpen)}
         id="left"
+        style={{ width: 200 }}
       >
         <DrawerCloseButton onClick={() => setOpenLeft(false)} />
       </Drawer>
@@ -25,6 +26,7 @@ export const Position = (): ReactElement => {
         onOpenChange={(newOpen) => setOpenRight(newOpen)}
         position="right"
         id="right"
+        style={{ width: 200 }}
       >
         <DrawerCloseButton onClick={() => setOpenRight(false)} />
       </Drawer>
@@ -34,6 +36,7 @@ export const Position = (): ReactElement => {
         onOpenChange={(newOpen) => setOpenTop(newOpen)}
         position="top"
         id="top"
+        style={{ height: 200 }}
       >
         <DrawerCloseButton onClick={() => setOpenTop(false)} />
       </Drawer>
@@ -43,6 +46,7 @@ export const Position = (): ReactElement => {
         onOpenChange={(newOpen) => setOpenBottom(newOpen)}
         position="bottom"
         id="bottom"
+        style={{ height: 200 }}
       >
         <DrawerCloseButton onClick={() => setOpenBottom(false)} />
       </Drawer>

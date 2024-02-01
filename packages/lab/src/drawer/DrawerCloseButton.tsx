@@ -19,15 +19,17 @@ export const DrawerCloseButton = forwardRef<HTMLButtonElement, ButtonProps>(
     });
 
     return (
-      <Button
-        ref={ref}
-        aria-label="Close Drawer"
-        variant="secondary"
-        className={clsx(withBaseName(), className)}
-        {...rest}
-      >
-        <CloseIcon aria-hidden />
-      </Button>
+      <div className={withBaseName("container")}>
+        <Button
+          ref={ref}
+          aria-label="Close Drawer"
+          variant="secondary"
+          className={clsx(withBaseName(), className)}
+          {...rest}
+        >
+          <CloseIcon aria-hidden />
+        </Button>
+      </div>
     );
   }
 );

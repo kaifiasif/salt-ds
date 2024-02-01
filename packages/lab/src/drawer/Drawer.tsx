@@ -85,10 +85,11 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
 
   const handleRef = useForkRef<HTMLDivElement>(floating, ref);
 
-  const getDrawerProps = () => {
+  const getDrawerProps = (restProps: DrawerProps) => {
     return getFloatingProps({
       ref: floating,
-      id: `${id}-drawer`,
+      id,
+      ...restProps,
     });
   };
 
@@ -98,14 +99,15 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
     }
   }, [open, showComponent, setShowComponent]);
 
-  if (!showComponent) return null;
+  if (!open && !showComponent) return null;
 
   return (
     <Scrim>
       <FloatingComponent
-        aria-modal="true"
         open={open}
         ref={handleRef}
+        aria-modal="true"
+        aria-labelledby={`${id}-header`}
         focusManagerProps={{
           context: context,
         }}
@@ -124,8 +126,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
             setShowComponent(false);
           }
         }}
-        {...rest}
-        {...getDrawerProps()}
+        {...getDrawerProps(rest)}
       >
         {children}
       </FloatingComponent>
