@@ -21,7 +21,7 @@ const FormFieldExample = () => (
   </FormField>
 );
 
-export const RightUseCase = (): ReactElement => {
+export const RightDrawerUsageExample = (): ReactElement => {
   const [open, setOpen] = useState(false);
   const id = "right-drawer";
 
@@ -59,9 +59,6 @@ export const RightUseCase = (): ReactElement => {
           {Array.from({ length: 7 }, (_, index) => (
             <FormFieldExample key={index} />
           ))}
-          <FlexItem align="end">
-            <Button onClick={handleClose}>Close Drawer</Button>
-          </FlexItem>
         </StackLayout>
       </Drawer>
     </>

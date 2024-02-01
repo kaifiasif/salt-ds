@@ -24,9 +24,15 @@ Set `variant="secondary"` for a secondary drawer.
 
 You can place drawer on the `left`, `right`, `top` and `bottom` edges using the `position` prop.
 
+#### Best practices
+
+- Use top drawer to display information best displayed in horizontal format, e.g., complex filters or a summary panel.
+- Use bottom drawer for any master-detail layout containing graphs and images.
+- Use right drawer to show supporting information, notifications or quick settings.
+
 </LivePreview>
 
-<LivePreview componentName="drawer" exampleName="RightUseCase" >
+<LivePreview componentName="drawer" exampleName="RightDrawerUsageExample" >
 
 ### Right drawer use case
 
@@ -34,7 +40,7 @@ Consider using a right-anchored drawer to show supporting information related to
 
 </LivePreview>
 
-<LivePreview componentName="drawer" exampleName="TopUseCase" >
+<LivePreview componentName="drawer" exampleName="TopDrawerUsageExample" >
 
 ### Top drawer use case
 
@@ -42,7 +48,7 @@ Anchor your drawer to the top edge if it will display supporting information tha
 
 </LivePreview>
 
-<LivePreview componentName="drawer" exampleName="BottomUseCase" >
+<LivePreview componentName="drawer" exampleName="BottomDrawerUsageExample" >
 
 ### Bottom drawer use case
 
@@ -50,11 +56,14 @@ Anchor a drawer to the bottom edge of the screen when using a master-detail layo
 
 </LivePreview>
 
-<LivePreview componentName="drawer" exampleName="OptionalCloseButton" >
+<LivePreview componentName="drawer" exampleName="OptionalCloseAction" >
 
-### Optional close button
+### Optional close action
 
-This example closes when the user clicks the **Submit** button instead of closing with the drawer's optional close button. When present, the close button always appears on the top right corner of the drawer.
+This example closes when the user clicks the **Submit** button instead of closing with the drawer's optional close button.
+When present, the close button always appears on the top right corner of the drawer, it's sticky and doesn't scroll.
+
+In certain use cases, i.e., when user needs to complete form fields, an alternative action such as a 'submit and close' button, would be more appropriate than a close button.
 
 </LivePreview>
 </LivePreviewControls>

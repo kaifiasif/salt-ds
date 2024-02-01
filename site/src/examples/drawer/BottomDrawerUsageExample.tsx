@@ -4,7 +4,7 @@ import { Drawer, DrawerCloseButton } from "@salt-ds/lab";
 import { Button, FlexItem, FlowLayout, StackLayout, H2 } from "@salt-ds/core";
 import { MultipleCards } from "../card";
 
-export const BottomUseCase = (): ReactElement => {
+export const BottomDrawerUsageExample = (): ReactElement => {
   const [open, setOpen] = useState(false);
   const id = "bottom-drawer";
 
@@ -38,9 +38,6 @@ export const BottomUseCase = (): ReactElement => {
             <MultipleCards />
             <MultipleCards />
           </FlowLayout>
-          <FlexItem align="end">
-            <Button onClick={handleClose}>Close Drawer</Button>
-          </FlexItem>
         </StackLayout>
       </Drawer>
     </>

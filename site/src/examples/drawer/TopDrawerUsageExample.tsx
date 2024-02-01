@@ -22,7 +22,7 @@ const FormFieldExample = () => (
   </FormField>
 );
 
-export const TopUseCase = (): ReactElement => {
+export const TopDrawerUsageExample = (): ReactElement => {
   const [open, setOpen] = useState(false);
   const id = "top-drawer";
 
@@ -56,9 +56,6 @@ export const TopUseCase = (): ReactElement => {
               <FormFieldExample key={index} />
             ))}
           </FlexLayout>
-          <FlexItem align="end">
-            <Button onClick={handleClose}>Close Drawer</Button>
-          </FlexItem>
         </StackLayout>
       </Drawer>
     </>

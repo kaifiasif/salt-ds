@@ -2,8 +2,6 @@ import { H2, Text, SaltProvider } from "@salt-ds/core";
 import { Drawer, DrawerCloseButton } from "@salt-ds/lab";
 import { StoryFn, Meta } from "@storybook/react";
 
-import "./drawer.stories.css";
-
 export default {
   title: "Lab/Drawer/Drawer QA",
   component: Drawer,

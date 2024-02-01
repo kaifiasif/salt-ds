@@ -3,7 +3,7 @@ import * as drawerStories from "@stories/drawer/drawer.stories";
 
 const composedStories = composeStories(drawerStories);
 
-const { Default, OptionalCloseButton } = composedStories;
+const { Default, OptionalCloseAction } = composedStories;
 
 describe("GIVEN a Drawer", () => {
   describe("WHEN a drawer with close button is open", () => {
@@ -45,7 +45,7 @@ describe("GIVEN a Drawer", () => {
 
   describe("WHEN a drawer without close button is open", () => {
     it("THEN it should close on outside Drawer click or Esc key press", () => {
-      cy.mount(<OptionalCloseButton />);
+      cy.mount(<OptionalCloseAction />);
 
       cy.findByRole("button", { name: /Open Drawer/i }).click();
       cy.findByRole("dialog").should("be.visible");
@@ -59,7 +59,7 @@ describe("GIVEN a Drawer", () => {
     });
 
     it("THEN it should trap focus within Drawer once opened", () => {
-      cy.mount(<OptionalCloseButton />);
+      cy.mount(<OptionalCloseAction />);
 
       cy.findByRole("button", { name: /Open Drawer/i }).click();
       cy.findByRole("dialog").should("be.visible");
@@ -74,7 +74,7 @@ describe("GIVEN a Drawer", () => {
     });
 
     it("THEN focus goes into the first focusable element within Drawer", () => {
-      cy.mount(<OptionalCloseButton />);
+      cy.mount(<OptionalCloseAction />);
 
       cy.findByRole("button", { name: /Open Drawer/i }).click();
       cy.findByRole("dialog").should("be.visible");
@@ -82,7 +82,7 @@ describe("GIVEN a Drawer", () => {
     });
 
     it("THEN closes Drawer when an element is configured to close it", () => {
-      cy.mount(<OptionalCloseButton />);
+      cy.mount(<OptionalCloseAction />);
 
       cy.findByRole("button", { name: /Open Drawer/i }).click();
       cy.findByRole("dialog").should("be.visible");

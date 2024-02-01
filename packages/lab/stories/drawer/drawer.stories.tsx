@@ -16,7 +16,6 @@ import {
 } from "@salt-ds/core";
 import { ComboBoxNext, Option, Drawer, DrawerCloseButton } from "@salt-ds/lab";
 import { Meta } from "@storybook/react";
-import { DefaultWithLinkAndImage } from "@salt-ds/core/stories/card/card.stories";
 
 export default {
   title: "Lab/Drawer",
@@ -111,7 +110,7 @@ const FormFieldExample = () => (
   </FormField>
 );
 
-export const TopUseCase = () => {
+export const TopDrawerUsageExample = () => {
   const [open, setOpen] = useState(false);
   const id = "top-drawer";
 
@@ -145,16 +144,13 @@ export const TopUseCase = () => {
               <FormFieldExample key={index} />
             ))}
           </FlexLayout>
-          <FlexItem align="end">
-            <Button onClick={handleClose}>Close Drawer</Button>
-          </FlexItem>
         </StackLayout>
       </Drawer>
     </>
   );
 };
 
-export const RightUseCase = () => {
+export const RightDrawerUsageExample = () => {
   const [open, setOpen] = useState(false);
   const id = "right-drawer";
 
@@ -192,16 +188,13 @@ export const RightUseCase = () => {
           {Array.from({ length: 7 }, (_, index) => (
             <FormFieldExample key={index} />
           ))}
-          <FlexItem align="end">
-            <Button onClick={handleClose}>Close Drawer</Button>
-          </FlexItem>
         </StackLayout>
       </Drawer>
     </>
   );
 };
 
-export const BottomUseCase = () => {
+export const BottomDrawerUsageExample = () => {
   const [open, setOpen] = useState(false);
   const id = "bottom-drawer";
 
@@ -217,6 +210,24 @@ export const BottomUseCase = () => {
     setOpen(false);
   };
 
+  const exampleData = [
+    {
+      title: "Sustainable investing products",
+      content:
+        "We have a commitment to provide a wide range of investment solutions to enable you to align your financial goals to your values.",
+    },
+    {
+      title: "Our expertise",
+      content:
+        "Our team of more than 200 experts in 28 offices worldwide is on hand to help you with your investment decisions.",
+    },
+    {
+      title: "Market-leading insights",
+      content:
+        "Our award-winning strategists provide unique and regular insights about market events and current trends.",
+    },
+  ];
+
   return (
     <>
       <Button onClick={handleRequestOpen}>Bottom Drawer</Button>
@@ -231,20 +242,26 @@ export const BottomUseCase = () => {
         <StackLayout>
           <H2 id={`${id}-header`}>Bottom drawer use case</H2>
           <FlowLayout>
-            <DefaultWithLinkAndImage />
-            <DefaultWithLinkAndImage />
-            <DefaultWithLinkAndImage />
+            <Card style={{ width: "256px" }}>
+              <H2>{exampleData[0].title}</H2>
+              <Text>{exampleData[0].content}</Text>
+            </Card>
+            <Card style={{ width: "256px" }}>
+              <H2>{exampleData[1].title}</H2>
+              <Text>{exampleData[1].content}</Text>
+            </Card>
+            <Card style={{ width: "256px" }}>
+              <H2>{exampleData[2].title}</H2>
+              <Text>{exampleData[2].content}</Text>
+            </Card>
           </FlowLayout>
-          <FlexItem align="end">
-            <Button onClick={handleClose}>Close Drawer</Button>
-          </FlexItem>
         </StackLayout>
       </Drawer>
     </>
   );
 };
 
-export const OptionalCloseButton = () => {
+export const OptionalCloseAction = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 

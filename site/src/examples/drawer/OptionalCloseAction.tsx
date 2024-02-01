@@ -12,7 +12,7 @@ import {
   H2,
 } from "@salt-ds/core";
 
-export const OptionalCloseButton = (): ReactElement => {
+export const OptionalCloseAction = (): ReactElement => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
