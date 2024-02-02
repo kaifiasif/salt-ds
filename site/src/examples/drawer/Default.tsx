@@ -9,7 +9,7 @@ export const Default = (): ReactElement => {
 
   return (
     <StackLayout>
-      <Button onClick={() => setOpenPrimary(true)}>Primary Drawer</Button>
+      <Button onClick={() => setOpenPrimary(true)}>Open Primary Drawer</Button>
       <Drawer
         open={openPrimary}
         onOpenChange={(newOpen) => setOpenPrimary(newOpen)}
@@ -18,7 +18,7 @@ export const Default = (): ReactElement => {
       >
         <DrawerCloseButton onClick={() => setOpenPrimary(false)} />
       </Drawer>
-      <Button onClick={() => setOpenSecondary(true)}>Secondary Drawer</Button>
+      <Button onClick={() => setOpenSecondary(true)}>Open Secondary Drawer</Button>
       <Drawer
         open={openSecondary}
         onOpenChange={(newOpen) => setOpenSecondary(newOpen)}

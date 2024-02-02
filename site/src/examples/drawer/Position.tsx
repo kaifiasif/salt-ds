@@ -11,7 +11,7 @@ export const Position = (): ReactElement => {
 
   return (
     <StackLayout>
-      <Button onClick={() => setOpenLeft(true)}>Left Drawer</Button>
+      <Button onClick={() => setOpenLeft(true)}>Open Left Drawer</Button>
       <Drawer
         open={openLeft}
         onOpenChange={(newOpen) => setOpenLeft(newOpen)}
@@ -20,7 +20,7 @@ export const Position = (): ReactElement => {
       >
         <DrawerCloseButton onClick={() => setOpenLeft(false)} />
       </Drawer>
-      <Button onClick={() => setOpenRight(true)}>Right Drawer</Button>
+      <Button onClick={() => setOpenRight(true)}>Open Right Drawer</Button>
       <Drawer
         open={openRight}
         onOpenChange={(newOpen) => setOpenRight(newOpen)}
@@ -30,7 +30,7 @@ export const Position = (): ReactElement => {
       >
         <DrawerCloseButton onClick={() => setOpenRight(false)} />
       </Drawer>
-      <Button onClick={() => setOpenTop(true)}>Top Drawer</Button>
+      <Button onClick={() => setOpenTop(true)}>Open Top Drawer</Button>
       <Drawer
         open={openTop}
         onOpenChange={(newOpen) => setOpenTop(newOpen)}
@@ -40,7 +40,7 @@ export const Position = (): ReactElement => {
       >
         <DrawerCloseButton onClick={() => setOpenTop(false)} />
       </Drawer>
-      <Button onClick={() => setOpenBottom(true)}>Bottom Drawer</Button>
+      <Button onClick={() => setOpenBottom(true)}>Open Bottom Drawer</Button>
       <Drawer
         open={openBottom}
         onOpenChange={(newOpen) => setOpenBottom(newOpen)}

@@ -1,7 +1,7 @@
 import { ReactElement, useState } from "react";
 
 import { Drawer, DrawerCloseButton } from "@salt-ds/lab";
-import { Button, FlexItem, FlowLayout, StackLayout, H2 } from "@salt-ds/core";
+import { Button, FlowLayout, StackLayout, H2 } from "@salt-ds/core";
 import { MultipleCards } from "../card";
 
 export const BottomDrawerUsageExample = (): ReactElement => {
@@ -22,7 +22,7 @@ export const BottomDrawerUsageExample = (): ReactElement => {
 
   return (
     <>
-      <Button onClick={handleRequestOpen}>Bottom Drawer</Button>
+      <Button onClick={handleRequestOpen}>Open Bottom Drawer</Button>
       <Drawer
         open={open}
         onOpenChange={onOpenChange}
@@ -32,7 +32,7 @@ export const BottomDrawerUsageExample = (): ReactElement => {
       >
         <DrawerCloseButton onClick={handleClose} />
         <StackLayout>
-          <H2 id={`${id}-header`}>Bottom drawer use case</H2>
+          <H2 id={`${id}-header`}>Bottom drawer usage example</H2>
           <FlowLayout>
             <MultipleCards />
             <MultipleCards />

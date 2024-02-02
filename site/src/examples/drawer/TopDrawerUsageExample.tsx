@@ -3,7 +3,6 @@ import { ReactElement, useState } from "react";
 import { Drawer, DrawerCloseButton } from "@salt-ds/lab";
 import {
   Button,
-  FlexItem,
   FlexLayout,
   FormField,
   FormFieldHelperText,
@@ -40,7 +39,7 @@ export const TopDrawerUsageExample = (): ReactElement => {
 
   return (
     <>
-      <Button onClick={handleRequestOpen}>Top Drawer</Button>
+      <Button onClick={handleRequestOpen}>Open Top Drawer</Button>
       <Drawer open={open} onOpenChange={onOpenChange} position="top" id={id}>
         <StackLayout>
           <DrawerCloseButton onClick={handleClose} />

@@ -28,7 +28,7 @@ export const Default = ({ position = "left", ...args }) => {
 
   return (
     <StackLayout>
-      <Button onClick={() => setOpenPrimary(true)}>Primary Drawer</Button>
+      <Button onClick={() => setOpenPrimary(true)}>Open Primary Drawer</Button>
       <Drawer
         open={openPrimary}
         onOpenChange={(newOpen) => setOpenPrimary(newOpen)}
@@ -37,7 +37,9 @@ export const Default = ({ position = "left", ...args }) => {
       >
         <DrawerCloseButton onClick={() => setOpenPrimary(false)} />
       </Drawer>
-      <Button onClick={() => setOpenSecondary(true)}>Secondary Drawer</Button>
+      <Button onClick={() => setOpenSecondary(true)}>
+        Open Secondary Drawer
+      </Button>
       <Drawer
         open={openSecondary}
         onOpenChange={(newOpen) => setOpenSecondary(newOpen)}
@@ -59,7 +61,7 @@ export const Position = ({ position = "left", ...args }) => {
 
   return (
     <StackLayout>
-      <Button onClick={() => setOpenLeft(true)}>Left Drawer</Button>
+      <Button onClick={() => setOpenLeft(true)}>Open Left Drawer</Button>
       <Drawer
         open={openLeft}
         onOpenChange={(newOpen) => setOpenLeft(newOpen)}
@@ -68,7 +70,7 @@ export const Position = ({ position = "left", ...args }) => {
       >
         <DrawerCloseButton onClick={() => setOpenLeft(false)} />
       </Drawer>
-      <Button onClick={() => setOpenRight(true)}>Right Drawer</Button>
+      <Button onClick={() => setOpenRight(true)}>Open Right Drawer</Button>
       <Drawer
         open={openRight}
         onOpenChange={(newOpen) => setOpenRight(newOpen)}
@@ -78,7 +80,7 @@ export const Position = ({ position = "left", ...args }) => {
       >
         <DrawerCloseButton onClick={() => setOpenRight(false)} />
       </Drawer>
-      <Button onClick={() => setOpenTop(true)}>Top Drawer</Button>
+      <Button onClick={() => setOpenTop(true)}>Open Top Drawer</Button>
       <Drawer
         open={openTop}
         onOpenChange={(newOpen) => setOpenTop(newOpen)}
@@ -88,7 +90,7 @@ export const Position = ({ position = "left", ...args }) => {
       >
         <DrawerCloseButton onClick={() => setOpenTop(false)} />
       </Drawer>
-      <Button onClick={() => setOpenBottom(true)}>Bottom Drawer</Button>
+      <Button onClick={() => setOpenBottom(true)}>Open Bottom Drawer</Button>
       <Drawer
         open={openBottom}
         onOpenChange={(newOpen) => setOpenBottom(newOpen)}
@@ -128,7 +130,7 @@ export const TopDrawerUsageExample = () => {
 
   return (
     <>
-      <Button onClick={handleRequestOpen}>Top Drawer</Button>
+      <Button onClick={handleRequestOpen}>Open Top Drawer</Button>
       <Drawer open={open} onOpenChange={onOpenChange} position="top" id="top">
         <StackLayout>
           <DrawerCloseButton onClick={handleClose} />
@@ -168,7 +170,7 @@ export const RightDrawerUsageExample = () => {
 
   return (
     <>
-      <Button onClick={handleRequestOpen}>Right Drawer</Button>
+      <Button onClick={handleRequestOpen}>Open Right Drawer</Button>
       <Drawer
         open={open}
         onOpenChange={onOpenChange}
@@ -230,7 +232,7 @@ export const BottomDrawerUsageExample = () => {
 
   return (
     <>
-      <Button onClick={handleRequestOpen}>Bottom Drawer</Button>
+      <Button onClick={handleRequestOpen}>Open Bottom Drawer</Button>
       <Drawer
         open={open}
         onOpenChange={onOpenChange}
