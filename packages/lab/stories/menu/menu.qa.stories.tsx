@@ -9,8 +9,7 @@ export default {
 } as Meta;
 
 export const AllExamples: StoryFn<QAContainerProps> = () => (
-  <>
-    <QAContainer height={1710} width={800} itemPadding={4} itemWidthAuto>
+    <QAContainer itemPadding={12} transposeDensity>
       <Menu open>
         <MenuTrigger>
           <Button>Click</Button>
@@ -23,7 +22,6 @@ export const AllExamples: StoryFn<QAContainerProps> = () => (
         </MenuPanel>
       </Menu>
     </QAContainer>
-  </>
 );
 
 AllExamples.parameters = {
