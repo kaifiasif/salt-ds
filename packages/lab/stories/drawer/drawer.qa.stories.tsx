@@ -1,296 +1,58 @@
-import { H2, Text, SaltProvider } from "@salt-ds/core";
-import { Drawer, DrawerCloseButton } from "@salt-ds/lab";
+import { H2, Text, StackLayout } from "@salt-ds/core";
+import { Drawer, DrawerCloseButton, DrawerProps } from "@salt-ds/lab";
 import { StoryFn, Meta } from "@storybook/react";
+import { QAContainer, QAContainerProps } from "docs/components";
 
 export default {
   title: "Lab/Drawer/Drawer QA",
   component: Drawer,
 } as Meta<typeof Drawer>;
 
-const DrawerTemplate: StoryFn<typeof Drawer> = ({
-  position = "left",
-  variant = "primary",
-  style = {
-    width: 300,
-    height: 200,
-  },
-}) => {
+function FakeDrawer({ children, ...rest }: DrawerProps) {
   return (
-    <Drawer
-      open={true}
-      position={position}
-      variant={variant}
-      style={{ animation: "unset", ...style }}
+    <div
+      style={{
+        width: 350,
+        height: 300,
+      }}
+      {...rest}
     >
-      <DrawerCloseButton />
-      <H2>Title</H2>
-      <Text>
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since the 1500s, when an unknown printer took a galley of type and
-        scrambled it to make a type specimen book. It has survived not only five
-        centuries, but also the leap into electronic typesetting, remaining
-        essentially unchanged. It was popularised in the 1960s with the release
-        of Letraset sheets containing Lorem Ipsum passages, and more recently
-        with desktop publishing software like Aldus PageMaker including versions
-        of Lorem Ipsum
-      </Text>
-    </Drawer>
+      {children}
+    </div>
+  );
+}
+
+const DrawerTemplate: StoryFn<typeof Drawer> = () => {
+  return (
+    <StackLayout>
+      <FakeDrawer>
+        <DrawerCloseButton />
+        <H2>Title</H2>
+        <Text>
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's standard dummy text ever
+          since the 1500s, when an unknown printer took a galley of type and
+          scrambled it to make a type specimen book. It has survived not only
+          five centuries, but also the leap into electronic typesetting,
+          remaining essentially unchanged. It was popularised in the 1960s with
+          the release of Letraset sheets containing Lorem Ipsum passages, and
+          more recently with desktop publishing software like Aldus PageMaker
+          including versions of Lorem Ipsum
+        </Text>
+      </FakeDrawer>
+    </StackLayout>
   );
 };
 
-export const LeftRightDrawerLD: StoryFn = () => {
-  return (
-    <SaltProvider density="low">
-      <DrawerTemplate position="left" style={{ width: 300 }} />
-      <DrawerTemplate position="right" style={{ width: 300 }} />
-    </SaltProvider>
-  );
-};
-LeftRightDrawerLD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
+export const DrawerExamples: StoryFn<QAContainerProps> = (props) => {
+  const { ...rest } = props;
 
-export const LeftRightDrawerSecondaryLD: StoryFn = () => {
   return (
-    <SaltProvider density="low">
-      <DrawerTemplate
-        position="left"
-        variant="secondary"
-        style={{ width: 300 }}
-      />
-      <DrawerTemplate
-        position="right"
-        variant="secondary"
-        style={{ width: 300 }}
-      />
-    </SaltProvider>
+    <QAContainer height={1800} itemPadding={20} width={1000} {...rest}>
+      <DrawerTemplate />
+    </QAContainer>
   );
 };
-LeftRightDrawerSecondaryLD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const LeftRightDrawerMD: StoryFn = () => {
-  return (
-    <SaltProvider density="medium">
-      <DrawerTemplate style={{ width: 300 }} />
-      <DrawerTemplate position="right" style={{ width: 300 }} />
-    </SaltProvider>
-  );
-};
-LeftRightDrawerMD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const LeftRightDrawerSecondaryMD: StoryFn = () => {
-  return (
-    <SaltProvider density="medium">
-      <DrawerTemplate
-        position="left"
-        variant="secondary"
-        style={{ width: 300 }}
-      />
-      <DrawerTemplate
-        position="right"
-        variant="secondary"
-        style={{ width: 300 }}
-      />
-    </SaltProvider>
-  );
-};
-LeftRightDrawerMD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const LeftRightDrawerHD: StoryFn = () => {
-  return (
-    <SaltProvider density="high">
-      <DrawerTemplate position="left" style={{ width: 300 }} />
-      <DrawerTemplate position="right" style={{ width: 300 }} />
-    </SaltProvider>
-  );
-};
-LeftRightDrawerHD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const LeftRightDrawerSecondaryHD: StoryFn = () => {
-  return (
-    <SaltProvider density="high">
-      <DrawerTemplate
-        position="left"
-        variant="secondary"
-        style={{ width: 300 }}
-      />
-      <DrawerTemplate
-        position="right"
-        variant="secondary"
-        style={{ width: 300 }}
-      />
-    </SaltProvider>
-  );
-};
-LeftRightDrawerSecondaryHD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const LeftRightDrawerTD: StoryFn = () => {
-  return (
-    <SaltProvider density="touch">
-      <DrawerTemplate position="left" style={{ width: 300 }} />
-      <DrawerTemplate position="right" style={{ width: 300 }} />
-    </SaltProvider>
-  );
-};
-LeftRightDrawerTD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const LeftRightDrawerSecondaryTD: StoryFn = () => {
-  return (
-    <SaltProvider density="touch">
-      <DrawerTemplate
-        position="left"
-        variant="secondary"
-        style={{ width: 300 }}
-      />
-      <DrawerTemplate
-        position="right"
-        variant="secondary"
-        style={{ width: 300 }}
-      />
-    </SaltProvider>
-  );
-};
-LeftRightDrawerSecondaryTD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const TopBottomDrawerLD: StoryFn = () => {
-  return (
-    <SaltProvider density="low">
-      <DrawerTemplate position="top" style={{ height: 200 }} />
-      <DrawerTemplate position="bottom" style={{ height: 200 }} />
-    </SaltProvider>
-  );
-};
-TopBottomDrawerLD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const TopBottomDrawerSecondaryLD: StoryFn = () => {
-  return (
-    <SaltProvider density="low">
-      <DrawerTemplate
-        position="top"
-        variant="secondary"
-        style={{ height: 200 }}
-      />
-      <DrawerTemplate
-        position="bottom"
-        variant="secondary"
-        style={{ height: 200 }}
-      />
-    </SaltProvider>
-  );
-};
-TopBottomDrawerLD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const TopBottomDrawerMD: StoryFn = () => {
-  return (
-    <SaltProvider density="medium">
-      <DrawerTemplate position="top" style={{ height: 200 }} />
-      <DrawerTemplate position="bottom" style={{ height: 200 }} />
-    </SaltProvider>
-  );
-};
-TopBottomDrawerMD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const TopBottomDrawerSecondaryMD: StoryFn = () => {
-  return (
-    <SaltProvider density="medium">
-      <DrawerTemplate
-        position="top"
-        variant="secondary"
-        style={{ height: 200 }}
-      />
-      <DrawerTemplate
-        position="bottom"
-        variant="secondary"
-        style={{ height: 200 }}
-      />
-    </SaltProvider>
-  );
-};
-TopBottomDrawerMD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const TopBottomDrawerHD: StoryFn = () => {
-  return (
-    <SaltProvider density="high">
-      <DrawerTemplate position="top" style={{ height: 200 }} />
-      <DrawerTemplate position="bottom" style={{ height: 200 }} />
-    </SaltProvider>
-  );
-};
-TopBottomDrawerHD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const TopBottomDrawerSecondaryHD: StoryFn = () => {
-  return (
-    <SaltProvider density="high">
-      <DrawerTemplate
-        position="top"
-        variant="secondary"
-        style={{ height: 200 }}
-      />
-      <DrawerTemplate
-        position="bottom"
-        variant="secondary"
-        style={{ height: 200 }}
-      />
-    </SaltProvider>
-  );
-};
-TopBottomDrawerSecondaryHD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const TopBottomDrawerTD: StoryFn = () => {
-  return (
-    <SaltProvider density="touch">
-      <DrawerTemplate position="top" style={{ height: 200 }} />
-      <DrawerTemplate position="bottom" style={{ height: 200 }} />
-    </SaltProvider>
-  );
-};
-TopBottomDrawerTD.parameters = {
-  chromatic: { disableSnapshot: false },
-};
-
-export const TopBottomDrawerSecondaryTD: StoryFn = () => {
-  return (
-    <SaltProvider density="touch">
-      <DrawerTemplate
-        position="top"
-        variant="secondary"
-        style={{ height: 200 }}
-      />
-      <DrawerTemplate
-        position="bottom"
-        variant="secondary"
-        style={{ height: 200 }}
-      />
-    </SaltProvider>
-  );
-};
-TopBottomDrawerTD.parameters = {
+DrawerExamples.parameters = {
   chromatic: { disableSnapshot: false },
 };
