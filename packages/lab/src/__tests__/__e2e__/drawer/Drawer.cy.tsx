@@ -10,21 +10,21 @@ describe("GIVEN a Drawer", () => {
     it("THEN it should close on close button click or outside Drawer click", () => {
       cy.mount(<Default />);
 
-      cy.findByRole("button", { name: /Open Primary Drawer/i }).click();
+      cy.findByRole("button", { name: "Open Primary Drawer" }).realClick();
       cy.findByRole("dialog").should("be.visible");
-      cy.findByRole("button", { name: /Close Drawer/i }).click();
+      cy.findByRole("button", { name: "Close Drawer" }).click();
       cy.findByRole("dialog").should("not.exist");
 
-      cy.findByRole("button", { name: /Open Secondary Drawer/i }).click();
+      cy.findByRole("button", { name: "Open Secondary Drawer" }).realClick();
       cy.findByRole("dialog").should("be.visible");
-      cy.get(".saltScrim").click();
+      cy.get(".saltScrim").realClick();
       cy.findByRole("dialog").should("not.exist");
     });
 
     it("THEN it should dismiss on Esc key press", () => {
       cy.mount(<Default />);
 
-      cy.findByRole("button", { name: /Open Primary Drawer/i }).click();
+      cy.findByRole("button", { name: "Open Primary Drawer" }).realClick();
       cy.findByRole("dialog").should("be.visible");
       cy.realPress("Escape");
       cy.findByRole("dialog").should("not.exist");
@@ -33,13 +33,13 @@ describe("GIVEN a Drawer", () => {
     it("THEN it should trap focus within Drawer once opened", () => {
       cy.mount(<Default />);
 
-      cy.findByRole("button", { name: /Open Primary Drawer/i }).click();
+      cy.findByRole("button", { name: "Open Primary Drawer" }).realClick();
       cy.findByRole("dialog").should("be.visible");
-      cy.findByRole("button", { name: /Close Drawer/i }).should("be.focused");
+      cy.findByRole("button", { name: "Close Drawer" }).should("be.focused");
       cy.realPress("Tab");
       cy.realPress("Tab");
       cy.realPress("Tab");
-      cy.findByRole("button", { name: /Close Drawer/i }).should("be.focused");
+      cy.findByRole("button", { name: "Close Drawer" }).should("be.focused");
     });
   });
 
@@ -47,12 +47,12 @@ describe("GIVEN a Drawer", () => {
     it("THEN it should close on outside Drawer click or Esc key press", () => {
       cy.mount(<OptionalCloseAction />);
 
-      cy.findByRole("button", { name: /Open Drawer/i }).click();
+      cy.findByRole("button", { name: "Open Drawer" }).realClick();
       cy.findByRole("dialog").should("be.visible");
-      cy.get(".saltScrim").click();
+      cy.get(".saltScrim").realClick();
       cy.findByRole("dialog").should("not.exist");
 
-      cy.findByRole("button", { name: /Open Drawer/i }).click();
+      cy.findByRole("button", { name: "Open Drawer" }).realClick();
       cy.findByRole("dialog").should("be.visible");
       cy.realPress("Escape");
       cy.findByRole("dialog").should("not.exist");
@@ -61,7 +61,7 @@ describe("GIVEN a Drawer", () => {
     it("THEN it should trap focus within Drawer once opened", () => {
       cy.mount(<OptionalCloseAction />);
 
-      cy.findByRole("button", { name: /Open Drawer/i }).click();
+      cy.findByRole("button", { name: "Open Drawer" }).realClick();
       cy.findByRole("dialog").should("be.visible");
       cy.realPress("Tab");
       cy.realPress("Tab");
@@ -70,23 +70,23 @@ describe("GIVEN a Drawer", () => {
       cy.realPress("Tab");
       cy.realPress("Tab");
       cy.realPress("Tab");
-      cy.findByRole("textbox", { name: /House no./i }).should("be.focused");
+      cy.findByRole("textbox", { name: "House no." }).should("be.focused");
     });
 
     it("THEN focus goes into the first focusable element within Drawer", () => {
       cy.mount(<OptionalCloseAction />);
 
-      cy.findByRole("button", { name: /Open Drawer/i }).click();
+      cy.findByRole("button", { name: "Open Drawer" }).realClick();
       cy.findByRole("dialog").should("be.visible");
-      cy.findByRole("textbox", { name: /House no./i }).should("be.focused");
+      cy.findByRole("textbox", { name: "House no." }).should("be.focused");
     });
 
-    it("THEN closes Drawer when an element is configured to close it", () => {
+    it("THEN it closes Drawer when an element is configured to close it", () => {
       cy.mount(<OptionalCloseAction />);
 
-      cy.findByRole("button", { name: /Open Drawer/i }).click();
+      cy.findByRole("button", { name: "Open Drawer" }).realClick();
       cy.findByRole("dialog").should("be.visible");
-      cy.findByRole("button", { name: /Submit/i }).click();
+      cy.findByRole("button", { name: "Submit" }).click();
       cy.findByRole("dialog").should("not.be.visible");
     });
   });

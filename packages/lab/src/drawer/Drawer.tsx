@@ -47,7 +47,7 @@ const withBaseName = makePrefixer("saltDrawer");
 
 export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
   props,
-  ref: ForwardedRef<HTMLDivElement>
+  ref
 ) {
   const {
     children,

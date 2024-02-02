@@ -18,7 +18,9 @@ export const Default = (): ReactElement => {
       >
         <DrawerCloseButton onClick={() => setOpenPrimary(false)} />
       </Drawer>
-      <Button onClick={() => setOpenSecondary(true)}>Open Secondary Drawer</Button>
+      <Button onClick={() => setOpenSecondary(true)}>
+        Open Secondary Drawer
+      </Button>
       <Drawer
         open={openSecondary}
         onOpenChange={(newOpen) => setOpenSecondary(newOpen)}
