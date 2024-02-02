@@ -33,10 +33,11 @@ export const MenuPanel = forwardRef<
       left={0}
       position={"absolute"}
       open={openState}
+      role="menu"
       ref={handleRef as RefObject<HTMLDivElement>}
       style={{ ...floatingStyles, ...style }}
       className={clsx(withBaseName(), className)}
-      {...rest} // {...getFloatingProps()}
+      {...rest}
     >
       {children}
     </FloatingComponent>
