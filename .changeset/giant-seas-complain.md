@@ -28,12 +28,12 @@ export const DrawerTemplate = (): ReactElement => {
       <Drawer
         open={open}
         onOpenChange={onOpenChange}
-        id="ID"
+        id="DRAWER_ID"
         style={{ width: 300 }}
       >
         <DrawerCloseButton onClick={handleClose} />
         <H2>Title</H2>
-        <H4>Content of drawer</H4>
+        <Text>Content of drawer</Text>
       </Drawer>
     </>
   );
