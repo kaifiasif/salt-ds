@@ -4,7 +4,6 @@ import {
   ReactEventHandler,
   SyntheticEvent,
   KeyboardEvent,
-  useState,
 } from "react";
 import { makePrefixer } from "@salt-ds/core";
 import { clsx } from "clsx";
@@ -18,23 +17,14 @@ const withBaseName = makePrefixer("saltMenuItem");
 
 interface MenuItemProps extends ComponentPropsWithoutRef<"button"> {
   onClick?: ReactEventHandler;
-  onMouseDown?: ReactEventHandler;
   onKeyDown?: ReactEventHandler;
   disabled?: boolean;
 }
 
 export const MenuItem = forwardRef<HTMLButtonElement, MenuItemProps>(
   function MenuItem(props, ref) {
-    const {
-      children,
-      className,
-      onClick,
-      onKeyDown,
-      onMouseDown,
-      disabled,
-      ...rest
-    } = props;
-    const [selected, setSelected] = useState<boolean>();
+    const { children, className, onClick, onKeyDown, disabled, ...rest } =
+      props;
 
     const { setOpen } = useMenuContext();
 
@@ -45,13 +35,6 @@ export const MenuItem = forwardRef<HTMLButtonElement, MenuItemProps>(
       window: targetWindow,
     });
 
-    const handleMouseDown = (event: SyntheticEvent) => {
-      if (disabled) {
-        return;
-      }
-      setSelected(true);
-      onMouseDown?.(event);
-    };
     const handleClick = (event: SyntheticEvent) => {
       if (disabled) {
         return;
@@ -68,17 +51,9 @@ export const MenuItem = forwardRef<HTMLButtonElement, MenuItemProps>(
     };
     return (
       <button
-        className={clsx(
-          withBaseName(),
-          {
-            [withBaseName("selected")]: selected,
-            [withBaseName("disabled")]: disabled,
-          },
-          className
-        )}
+        className={clsx(withBaseName(), className)}
         ref={ref}
         role="menuitem"
-        onMouseDown={handleMouseDown}
         onClick={handleClick}
         onKeyDown={handleOnKeyDown}
         disabled={disabled}

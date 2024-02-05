@@ -17,22 +17,16 @@
   cursor: var(--salt-selectable-cursor-hover);
 }
 
-.saltMenuItem-active {
-  background: var(--salt-selectable-background-hover);
-  border-color: var(--salt-selectable-borderColor-selected);
-}
-
-.saltMenuItem:not(.saltMenuItem-disabled):not(.saltMenuItem-selected):hover {
+.saltMenuItem:not(:disabled):not(:active):hover {
   background: var(--salt-selectable-background-hover);
 }
 
-.saltMenuItem-selected,
-.saltMenuItem-selected:hover {
+.saltMenuItem:active {
   background: var(--salt-selectable-background-selected);
   border-color: var(--salt-selectable-borderColor-selected);
 }
 
-.saltMenuItem-disabled {
+.saltMenuItem:disabled {
   color: var(--salt-text-primary-foreground-disabled);
   cursor: var(--salt-selectable-cursor-disabled);
 }
