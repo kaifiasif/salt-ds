@@ -97,9 +97,16 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
     if (open && !showComponent) {
       setShowComponent(true);
     }
+
+    if (!open && showComponent) {
+      const animate = setTimeout(() => {
+        setShowComponent(false);
+      }, 300); // var(--salt-duration-perceptible)
+      return () => clearTimeout(animate);
+    }
   }, [open, showComponent, setShowComponent]);
 
-  if (!open && !showComponent) return null;
+  if (!showComponent) return null;
 
   return (
     <Scrim>
@@ -121,11 +128,6 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
           },
           className
         )}
-        onAnimationEnd={() => {
-          if (!open && showComponent) {
-            setShowComponent(false);
-          }
-        }}
         {...getDrawerProps(rest)}
       >
         {children}
