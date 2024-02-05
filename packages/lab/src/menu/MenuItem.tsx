@@ -25,8 +25,15 @@ interface MenuItemProps extends ComponentPropsWithoutRef<"button"> {
 
 export const MenuItem = forwardRef<HTMLButtonElement, MenuItemProps>(
   function MenuItem(props, ref) {
-    const { children, className, onClick, onKeyDown, onMouseDown, disabled, ...rest } =
-      props;
+    const {
+      children,
+      className,
+      onClick,
+      onKeyDown,
+      onMouseDown,
+      disabled,
+      ...rest
+    } = props;
     const [selected, setSelected] = useState<boolean>();
 
     const { setOpen } = useMenuContext();
@@ -54,11 +61,11 @@ export const MenuItem = forwardRef<HTMLButtonElement, MenuItemProps>(
     };
 
     const handleOnKeyDown = (event: KeyboardEvent) => {
-      if(event.key === "Enter"){
+      if (event.key === "Enter") {
         setOpen(event, false);
       }
       onKeyDown?.(event);
-    }
+    };
     return (
       <button
         className={clsx(

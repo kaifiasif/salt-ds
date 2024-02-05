@@ -38,8 +38,7 @@
 }
 
 .saltMenuItem:focus-visible {
-  background: var(--salt-selectable-background-selected);
-  border-color: var(--salt-selectable-borderColor-selected);
+  background: var(--salt-selectable-background-hover);
   outline: var(--salt-focused-outline);
   outline-offset: calc(var(--salt-size-border) * -2);
 }

@@ -11,8 +11,8 @@ export interface MenuContextValue {
   context: FloatingContext;
   placement: Placement;
   strategy: Strategy;
-  x: number,
-  y: number,
+  x: number;
+  y: number;
   floatingStyles: CSSProperties;
   getFloatingProps?: (
     userProps?: React.HTMLProps<HTMLElement> | undefined
