@@ -1,6 +1,8 @@
 .saltMenuItem {
   color: var(--salt-text-primary-foreground);
   background: var(--salt-selectable-background);
+  border: none;
+  width: 100%;
   font-size: var(--salt-text-fontSize);
   font-weight: var(--salt-text-fontWeight);
   min-height: calc(var(--salt-size-base) + var(--salt-spacing-100));
@@ -20,11 +22,6 @@
   border-color: var(--salt-selectable-borderColor-selected);
 }
 
-.saltMenuItem-focusVisible {
-  outline: var(--salt-focused-outline);
-  outline-offset: calc(var(--salt-size-border) * -2);
-}
-
 .saltMenuItem:not(.saltMenuItem-disabled):not(.saltMenuItem-selected):hover {
   background: var(--salt-selectable-background-hover);
 }
@@ -38,4 +35,11 @@
 .saltMenuItem-disabled {
   color: var(--salt-text-primary-foreground-disabled);
   cursor: var(--salt-selectable-cursor-disabled);
+}
+
+.saltMenuItem:focus-visible {
+  background: var(--salt-selectable-background-selected);
+  border-color: var(--salt-selectable-borderColor-selected);
+  outline: var(--salt-focused-outline);
+  outline-offset: calc(var(--salt-size-border) * -2);
 }

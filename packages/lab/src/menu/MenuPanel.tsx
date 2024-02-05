@@ -23,23 +23,21 @@ export const MenuPanel = forwardRef<
 
   const { Component: FloatingComponent } = useFloatingComponent();
 
-  const { openState, refs, floatingStyles } = useMenuContext();
+  const { openState, refs, x, y, strategy, floatingStyles } = useMenuContext();
 
   const handleRef = useForkRef(refs.setFloating, ref);
 
-  return (
-    <FloatingComponent
-      top={0}
-      left={0}
-      position={"absolute"}
-      open={openState}
-      role="menu"
-      ref={handleRef as RefObject<HTMLDivElement>}
-      style={{ ...floatingStyles, ...style }}
-      className={clsx(withBaseName(), className)}
-      {...rest}
-    >
-      {children}
-    </FloatingComponent>
-  );
+  return <FloatingComponent
+    // top={x}
+    // left={y}
+    // position={strategy}
+    open={openState}
+    role="menu"
+    ref={handleRef as RefObject<HTMLDivElement>}
+    style={{ ...floatingStyles, ...style }}
+    className={clsx(withBaseName(), className)}
+    {...rest}
+  >
+    {children}
+  </FloatingComponent >
 });

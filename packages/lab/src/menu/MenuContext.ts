@@ -1,4 +1,4 @@
-import { Placement, Strategy } from "@floating-ui/react";
+import { FloatingContext, Placement, Strategy } from "@floating-ui/react";
 import { createContext, useFloatingUI } from "@salt-ds/core";
 import { CSSProperties, SyntheticEvent, useContext } from "react";
 
@@ -7,9 +7,13 @@ type FloatingReturn = ReturnType<typeof useFloatingUI>;
 export interface MenuContextValue {
   openState: boolean;
   setOpen: (event: SyntheticEvent, newOpen: boolean) => void;
-  floatingStyles: CSSProperties;
   refs: FloatingReturn["refs"];
+  context: FloatingContext;
   placement: Placement;
+  strategy: Strategy;
+  x: number,
+  y: number,
+  floatingStyles: CSSProperties;
   getFloatingProps?: (
     userProps?: React.HTMLProps<HTMLElement> | undefined
   ) => Record<string, unknown>;
@@ -23,6 +27,10 @@ export const MenuContext = createContext<MenuContextValue>("MenuContext", {
   setOpen() {
     return undefined;
   },
+  context: {} as FloatingContext,
+  x: 0,
+  y: 0,
+  strategy: "" as Strategy,
   floatingStyles: {
     top: 0,
     left: 0,

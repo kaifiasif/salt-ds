@@ -41,7 +41,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
     onOpenChange?.(event, newOpen);
   };
 
-  const { x, y, strategy, elements, refs } = useFloatingUI({
+  const {context, x, y, strategy, elements, refs } = useFloatingUI({
     open,
     placement,
     middleware: [offset(0), flip({}), shift({ limiter: limitShift() })],
@@ -52,15 +52,19 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
       elements.floating ? { position: strategy, top: y, left: x } : {}
     ) as CSSProperties;
   }, [elements.floating, strategy, x, y]);
-
+  
   return (
     <MenuContext.Provider
       value={{
+        context,
         openState,
         setOpen,
-        floatingStyles,
+        strategy, 
+        y, 
+        x,
         refs,
         placement,
+        floatingStyles
       }}
     >
       <div ref={ref} {...rest}>

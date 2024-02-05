@@ -9,7 +9,7 @@ export default {
 } as Meta;
 
 export const AllExamples: StoryFn<QAContainerProps> = () => (
-  <QAContainer itemPadding={12} transposeDensity>
+  <QAContainer cols={4}>
     <Menu open>
       <MenuTrigger>
         <Button>Click</Button>

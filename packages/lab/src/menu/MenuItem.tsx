@@ -3,6 +3,7 @@ import {
   forwardRef,
   ReactEventHandler,
   SyntheticEvent,
+  KeyboardEvent,
   useState,
 } from "react";
 import { makePrefixer } from "@salt-ds/core";
@@ -15,15 +16,16 @@ import menuItemCss from "./MenuItem.css";
 
 const withBaseName = makePrefixer("saltMenuItem");
 
-interface MenuItemProps extends ComponentPropsWithoutRef<"div"> {
+interface MenuItemProps extends ComponentPropsWithoutRef<"button"> {
   onClick?: ReactEventHandler;
   onMouseDown?: ReactEventHandler;
+  onKeyDown?: ReactEventHandler;
   disabled?: boolean;
 }
 
-export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
+export const MenuItem = forwardRef<HTMLButtonElement, MenuItemProps>(
   function MenuItem(props, ref) {
-    const { children, className, onClick, onMouseDown, disabled, ...rest } =
+    const { children, className, onClick, onKeyDown, onMouseDown, disabled, ...rest } =
       props;
     const [selected, setSelected] = useState<boolean>();
 
@@ -51,8 +53,14 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       onClick?.(event);
     };
 
+    const handleOnKeyDown = (event: KeyboardEvent) => {
+      if(event.key === "Enter"){
+        setOpen(event, false);
+      }
+      onKeyDown?.(event);
+    }
     return (
-      <div
+      <button
         className={clsx(
           withBaseName(),
           {
@@ -65,10 +73,12 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         role="menuitem"
         onMouseDown={handleMouseDown}
         onClick={handleClick}
+        onKeyDown={handleOnKeyDown}
+        disabled={disabled}
         {...rest}
       >
         {children}
-      </div>
+      </button>
     );
   }
 );
