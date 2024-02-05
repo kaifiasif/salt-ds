@@ -1,0 +1,97 @@
+---
+# Leave the frontmatter as is
+title:
+  $ref: ./#/title
+layout: DetailComponent
+sidebar:
+  exclude: true
+data:
+  $ref: ./#/data
+---
+
+<LivePreviewControls>
+  <LivePreview componentName="menu" exampleName="SingleLevelMenu">
+
+    ### Single-level menu
+
+    Menus can contain submenus creating a cascading effect. This enables users to access a larger number of choices without needing to read through too many options.
+
+  </LivePreview>
+
+  <LivePreview componentName="menu" exampleName="SingleLevelMenu">
+
+    ### Multi-level menu
+
+    Menus can contain submenus creating a cascading effect. This enables users to access a larger number of choices without needing to read through too many options.
+
+    - By default, submenus move to the right of the parent menu.
+
+    - When there’s not enough space in the viewport, submenus will move to the left.
+
+    - When there is even less screen space, submenus will be shown opposite the parent item, in a zig-zag pattern.
+
+    - Limiting menu depth to three levels or less is advisable to offer users with more visibility of controls, reduce uncertainty and minimize cognitive load.
+
+  </LivePreview>
+
+  <LivePreview componentName="menu" exampleName="SingleLevelMenu">
+
+    ### Grouped items
+
+    You can group related menu items together using a group header label and separator. The group header is a non-interactive element and is typically used to describe a group of actions.
+
+    #### Best practices
+
+    - Group menu items when you have a long list. This improves the user’s ability to scan the menu quickly and select the correct option.
+
+    - Use group headers to convey specific categories or sections within the menu to enhance clarity for users. When category distinctions are apparent without group headers, separators can be used on their own to create a cleaner visual break between menu items.
+
+  </LivePreview>
+
+  <LivePreview componentName="menu" exampleName="SingleLevelMenu">
+
+    ### Separator only
+
+    When necessary, you can divide menu items without explicitly grouping them using a separator.
+
+  </LivePreview>
+
+  <LivePreview componentName="menu" exampleName="SingleLevelMenu">
+
+    ### With icon
+
+    Menu items may also contain icons to represent actions or indicate categories. This makes the menu more intuitive and user-friendly.
+
+    #### Best practices
+
+    - Use icon descriptors consistently across all menu items within the same group.
+
+    - Use icons to help users locate commonly used actions (like cut, copy, and paste), to distinguish between categories, or to indicate different products and services within a menu.
+
+  </LivePreview>
+
+  <LivePreview componentName="menu" exampleName="SingleLevelMenu">
+
+    ### Placement
+
+    Use the `placement` prop to position a menu to the top, bottom, left or right of the trigger element.
+
+    By default, the menu is specified to position below and align with the right edge of the trigger element. A position is specified for the "root" menu and submenus: top, right. Where there is limited screen space, the menu will automatically adjust and flip to fit the user’s viewport.
+
+    #### Best practices
+
+    - Use icon descriptors consistently across all menu items within the same group.
+
+    - Use icons to help users locate commonly used actions (like cut, copy, and paste), to distinguish between categories, or to indicate different products and services within a menu.
+
+  </LivePreview>
+
+  <LivePreview componentName="menu" exampleName="SingleLevelMenu">
+
+    ### Maximum height (scroll)
+
+    When menu items exceed the height of the app window, the menu spans the max height of the viewport and becomes scrollable.
+
+  </LivePreview>
+
+</LivePreviewControls>

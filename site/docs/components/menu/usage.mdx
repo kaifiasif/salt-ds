@@ -1,0 +1,48 @@
+---
+# Leave the frontmatter as is
+title:
+  $ref: ./#/title
+layout: DetailComponent
+sidebar:
+  exclude: true
+data:
+  $ref: ./#/data
+---
+
+### Using the component
+
+#### When to use
+
+- To expose a set of preconfigured secondary actions or commands that are relevant to a specific task. You would typically use it in conjunction with more complex UIs, such as data grids, text editors or dashboards which support a large number of functions and actions.
+- To present users with multiple actions that are related to each other, like “Undo” or “Redo” and will dismiss once they have selected an action.
+
+#### When not to use
+
+- As a primary navigation method in your application. Instead, refer to the navigation pattern.
+- To display actions that are not relevant to the use case. For example, if your menu is contextual to a grid cell, “Save” or “Print” actions are likely to be irrelevant. Instead, use X.
+
+### Import
+
+To import `Menu` and related components from the lab Salt package, use:
+
+```js
+import { Menu, MenuTrigger, MenuPanel, MenuItem } from "@salt-ds/lab";
+```
+
+### Props
+
+#### Menu
+
+<PropsTable packageName="lab" componentName="Menu" />
+
+#### Menu Trigger
+
+<PropsTable packageName="lab" componentName="MenuTrigger" />
+
+#### Menu Panel
+
+<PropsTable packageName="lab" componentName="MenuPanel" />
+
+#### Menu Item
+
+<PropsTable packageName="lab" componentName="MenuItem" />
