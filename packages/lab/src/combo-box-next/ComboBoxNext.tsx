@@ -7,13 +7,12 @@ import {
   MouseEvent,
   ReactNode,
   Ref,
+  SyntheticEvent,
   useEffect,
   useRef,
 } from "react";
 import {
   Button,
-  Input,
-  InputProps,
   makePrefixer,
   useFloatingComponent,
   useFloatingUI,
@@ -28,9 +27,10 @@ import { flip, size } from "@floating-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@salt-ds/icons";
 import { useComboBoxNext } from "./useComboBoxNext";
 import { OptionList } from "../option/OptionList";
+import { PillInput, PillInputProps } from "../pill-input";
 
 export interface ComboBoxNextProps<Item = string>
-  extends InputProps,
+  extends PillInputProps,
     Omit<ListControlProps<Item>, "value" | "defaultValue"> {
   /**
    * The options to display in the combo box.
@@ -272,6 +272,12 @@ export const ComboBoxNext = forwardRef(function ComboBox<Item>(
     onChange?.(event);
   };
 
+  const handlePillRemove = (event: SyntheticEvent, index: number) => {
+    event.stopPropagation();
+    const removed = selectedState[index];
+    select(event, getOptionsMatching((option) => option.value === removed)[0]);
+  };
+
   const handleListMouseOver = () => {
     setFocusVisibleState(false);
   };
@@ -314,7 +320,7 @@ export const ComboBoxNext = forwardRef(function ComboBox<Item>(
 
   return (
     <ListControlContext.Provider value={listControl}>
-      <Input
+      <PillInput
         className={clsx(withBaseName(), className)}
         endAdornment={
           <>
@@ -360,6 +366,8 @@ export const ComboBoxNext = forwardRef(function ComboBox<Item>(
         variant={variant}
         inputRef={inputRef}
         value={valueState}
+        pills={multiselect ? selectedState : []}
+        onPillRemove={handlePillRemove}
         {...rest}
         ref={handleRef}
       />
