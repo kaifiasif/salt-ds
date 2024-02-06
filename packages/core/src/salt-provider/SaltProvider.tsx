@@ -19,16 +19,20 @@ import {
   useComponentCssInjection,
   StyleInjectionProvider,
 } from "@salt-ds/styles";
+import { UNSTABLE_CornerRadius } from "../theme/CornerRadius";
 
 export const DEFAULT_DENSITY = "medium";
 
 const DEFAULT_THEME_NAME = "salt-theme";
+const UNSTABLE_ADDITIONAL_THEME_NAME = "salt-theme-next";
 
 const DEFAULT_MODE = "light";
-
+const DEFAULT_CORNER: UNSTABLE_CornerRadius = "none";
 export interface ThemeContextProps {
   theme: ThemeName;
   mode: Mode;
+  /** Only available when using SaltProviderNext. */
+  UNSTABLE_corner: UNSTABLE_CornerRadius;
 }
 
 export const DensityContext = createContext<Density>(DEFAULT_DENSITY);
@@ -36,22 +40,53 @@ export const DensityContext = createContext<Density>(DEFAULT_DENSITY);
 export const ThemeContext = createContext<ThemeContextProps>({
   theme: "",
   mode: DEFAULT_MODE,
+  UNSTABLE_corner: DEFAULT_CORNER,
 });
 
 export const BreakpointContext =
   createContext<Breakpoints>(DEFAULT_BREAKPOINTS);
 
-const createThemedChildren = (
-  children: ReactNode,
-  themeName: ThemeName,
-  density: Density,
-  mode: Mode,
-  applyClassesTo?: TargetElement
-) => {
-  const themeNames =
-    themeName === DEFAULT_THEME_NAME
-      ? [DEFAULT_THEME_NAME]
-      : [DEFAULT_THEME_NAME, themeName];
+/**
+ * We're relying `DEFAULT_THEME_NAME` to determine whether the provider is a root.
+ */
+const getThemeNames = (themeName: ThemeName, themeNext?: boolean) => {
+  if (themeNext) {
+    return themeName === DEFAULT_THEME_NAME
+      ? [DEFAULT_THEME_NAME, UNSTABLE_ADDITIONAL_THEME_NAME]
+      : [DEFAULT_THEME_NAME, UNSTABLE_ADDITIONAL_THEME_NAME, themeName];
+  } else {
+    {
+      return themeName === DEFAULT_THEME_NAME
+        ? [DEFAULT_THEME_NAME]
+        : [DEFAULT_THEME_NAME, themeName];
+    }
+  }
+};
+
+interface ThemeNextProps {
+  themeNext?: boolean;
+}
+
+const createThemedChildren = ({
+  children,
+  themeName,
+  density,
+  mode,
+  applyClassesTo,
+  themeNext,
+  cornerRadius,
+}: {
+  children: ReactNode;
+  themeName: ThemeName;
+  density: Density;
+  mode: Mode;
+  applyClassesTo?: TargetElement;
+} & ThemeNextProps &
+  UNSTABLE_SaltProviderNextAdditionalProps) => {
+  const themeNames = getThemeNames(themeName);
+  const themeNextProps = {
+    "data-corner": cornerRadius,
+  };
   if (applyClassesTo === "root") {
     return children;
   } else if (applyClassesTo === "child") {
@@ -62,8 +97,10 @@ const createThemedChildren = (
           ...themeNames,
           `salt-density-${density}`
         ),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         "data-mode": mode,
+        ...(themeNext ? themeNextProps : {}),
       });
     } else {
       console.warn(
@@ -82,6 +119,7 @@ const createThemedChildren = (
           `salt-density-${density}`
         )}
         data-mode={mode}
+        {...(themeNext ? themeNextProps : {})}
       >
         {children}
       </div>
@@ -91,14 +129,14 @@ const createThemedChildren = (
 
 type TargetElement = "root" | "scope" | "child";
 
-type SaltProviderBaseProps = {
+interface SaltProviderBaseProps {
   applyClassesTo?: TargetElement;
   density?: Density;
   theme?: ThemeName;
   mode?: Mode;
   breakpoints?: Breakpoints;
   enableStyleInjection?: boolean;
-};
+}
 
 interface SaltProviderThatAppliesClassesToChild extends SaltProviderBaseProps {
   children: ReactElement;
@@ -126,32 +164,43 @@ function InternalSaltProvider({
   theme: themeProp,
   mode: modeProp,
   breakpoints: breakpointsProp,
-}: SaltProviderProps) {
+  themeNext,
+  cornerRadius: cornerRadiusProp,
+}: Omit<
+  SaltProviderProps & ThemeNextProps & UNSTABLE_SaltProviderNextProps,
+  "enableStyleInjection"
+>) {
   const inheritedDensity = useContext(DensityContext);
-  const { theme: inheritedThemes, mode: inheritedMode } = useTheme();
+  const {
+    theme: inheritedTheme,
+    mode: inheritedMode,
+    UNSTABLE_corner: inheritedCorner,
+  } = useTheme();
 
-  const isRoot = inheritedThemes === undefined || inheritedThemes === "";
+  const isRoot = inheritedTheme === undefined || inheritedTheme === "";
   const density = densityProp ?? inheritedDensity ?? DEFAULT_DENSITY;
   const themeName =
-    themeProp ??
-    (inheritedThemes === "" ? DEFAULT_THEME_NAME : inheritedThemes);
+    themeProp ?? (inheritedTheme === "" ? DEFAULT_THEME_NAME : inheritedTheme);
   const mode = modeProp ?? inheritedMode;
   const breakpoints = breakpointsProp ?? DEFAULT_BREAKPOINTS;
+  const corner = cornerRadiusProp ?? inheritedCorner ?? DEFAULT_CORNER;
 
   const applyClassesTo = applyClassesToProp ?? (isRoot ? "root" : "scope");
 
-  const themeContextValue = useMemo(
-    () => ({ theme: themeName, mode }),
-    [themeName, mode]
+  const themeContextValue = useMemo<ThemeContextProps>(
+    () => ({ theme: themeName, mode, UNSTABLE_corner: corner }),
+    [themeName, mode, corner]
   );
 
-  const themedChildren = createThemedChildren(
+  const themedChildren = createThemedChildren({
     children,
     themeName,
     density,
     mode,
-    applyClassesTo
-  );
+    applyClassesTo,
+    themeNext,
+    cornerRadius: corner,
+  });
 
   const targetWindow = useWindow();
   useComponentCssInjection({
@@ -161,10 +210,8 @@ function InternalSaltProvider({
   });
 
   useIsomorphicLayoutEffect(() => {
-    const themeNames =
-      themeName === DEFAULT_THEME_NAME
-        ? [DEFAULT_THEME_NAME]
-        : [DEFAULT_THEME_NAME, themeName];
+    const themeNames = getThemeNames(themeName, themeNext);
+
     if (applyClassesTo === "root" && targetWindow) {
       if (isRoot) {
         // add the styles we want to apply
@@ -173,6 +220,9 @@ function InternalSaltProvider({
           `salt-density-${density}`
         );
         targetWindow.document.documentElement.dataset.mode = mode;
+        if (themeNext) {
+          targetWindow.document.documentElement.dataset.corner = corner;
+        }
       } else {
         console.warn(
           "\nSaltProvider can only apply CSS classes to the root if it is the root level SaltProvider."
@@ -187,9 +237,22 @@ function InternalSaltProvider({
           `salt-density-${density}`
         );
         targetWindow.document.documentElement.dataset.mode = undefined;
+        if (themeNext) {
+          delete targetWindow.document.documentElement.dataset.corner;
+        }
       }
     };
-  }, [applyClassesTo, density, isRoot, mode, themeName, targetWindow]);
+  }, [
+    applyClassesTo,
+    density,
+    isRoot,
+    mode,
+    themeName,
+    targetWindow,
+    cornerRadiusProp,
+    themeNext,
+    corner,
+  ]);
 
   const saltProvider = (
     <DensityContext.Provider value={density}>
@@ -215,6 +278,25 @@ export function SaltProvider({
   return (
     <StyleInjectionProvider value={enableStyleInjection}>
       <InternalSaltProvider {...restProps} />
+    </StyleInjectionProvider>
+  );
+}
+
+interface UNSTABLE_SaltProviderNextAdditionalProps {
+  cornerRadius?: UNSTABLE_CornerRadius;
+}
+
+export type UNSTABLE_SaltProviderNextProps = SaltProviderProps &
+  UNSTABLE_SaltProviderNextAdditionalProps;
+
+export function UNSTABLE_SaltProviderNext({
+  enableStyleInjection,
+  ...restProps
+}: UNSTABLE_SaltProviderNextProps) {
+  return (
+    <StyleInjectionProvider value={enableStyleInjection}>
+      {/* Leveraging InternalSaltProvider being not exported, so we can pass more props than previously supported */}
+      <InternalSaltProvider {...restProps} themeNext={true} />
     </StyleInjectionProvider>
   );
 }

@@ -3,6 +3,7 @@ import {
   useAriaAnnouncer,
   useDensity,
   useTheme,
+  UNSTABLE_SaltProviderNext,
 } from "@salt-ds/core";
 import { mount } from "cypress/react";
 
@@ -14,7 +15,7 @@ const TestComponent = ({
   className?: string;
 }) => {
   const density = useDensity();
-  const { theme, mode } = useTheme();
+  const { theme, mode, UNSTABLE_corner } = useTheme();
   const { announce } = useAriaAnnouncer();
   const announcerPresent = typeof announce === "function";
 
@@ -26,6 +27,7 @@ const TestComponent = ({
       data-theme={theme}
       data-mode={mode}
       data-announcer={announcerPresent}
+      data-corner={UNSTABLE_corner}
     />
   );
 };
@@ -58,6 +60,17 @@ describe("Given a SaltProvider", () => {
         .and("have.attr", "data-mode", "light")
         .and("have.attr", "data-announcer", "true");
       cy.get("[aria-live]").should("exist");
+    });
+
+    it("should not have theme next class and attributes applied", () => {
+      mount(
+        <SaltProvider>
+          <TestComponent />
+        </SaltProvider>
+      );
+
+      cy.get(".salt-theme-next").should("have.length", 0);
+      cy.get("html").should("exist").and("not.have.attr", "data-corner");
     });
   });
 
@@ -186,6 +199,99 @@ describe("Given a SaltProvider", () => {
         .should("have.length", 1)
         .and("have.attr", "data-mode", "dark")
         .and("have.class", "salt-density-high");
+    });
+  });
+});
+
+describe("Given a SaltProviderNext", () => {
+  describe("with no props set", () => {
+    it("should apply default theme attributes to the html element", () => {
+      mount(
+        <UNSTABLE_SaltProviderNext>
+          <TestComponent />
+        </UNSTABLE_SaltProviderNext>
+      );
+
+      cy.get("div.salt-provider").should("have.length", 0);
+
+      cy.get("html")
+        .should("exist")
+        .and("have.attr", "data-mode", "light")
+        .and("have.attr", "data-corner", "none")
+        .and("have.class", "salt-density-medium");
+    });
+    it("should read correct default values from provider and add an AriaAnnouncer", () => {
+      mount(
+        <UNSTABLE_SaltProviderNext>
+          <TestComponent />
+        </UNSTABLE_SaltProviderNext>
+      );
+      cy.get("#test-1")
+        .should("exist")
+        .and("have.attr", "data-density", "medium")
+        .and("have.attr", "data-mode", "light")
+        .and("have.attr", "data-announcer", "true")
+        .and("have.attr", "data-corner", "none");
+      cy.get("[aria-live]").should("exist");
+    });
+  });
+
+  describe("when nested", () => {
+    it("should inherit values not passed as props", () => {
+      mount(
+        <UNSTABLE_SaltProviderNext
+          density="high"
+          mode="dark"
+          cornerRadius="rounded"
+        >
+          <TestComponent />
+          <UNSTABLE_SaltProviderNext density="medium">
+            <TestComponent id="test-2" />
+          </UNSTABLE_SaltProviderNext>
+        </UNSTABLE_SaltProviderNext>
+      );
+
+      cy.get("#test-1")
+        .should("exist")
+        .and("have.attr", "data-density", "high")
+        .and("have.attr", "data-mode", "dark")
+        .and("have.attr", "data-corner", "rounded")
+        .and("have.attr", "data-announcer", "true");
+
+      cy.get("#test-2")
+        .should("exist")
+        .and("have.attr", "data-density", "medium")
+        .and("have.attr", "data-mode", "dark")
+        .and("have.attr", "data-corner", "rounded")
+        .and("have.attr", "data-announcer", "true");
+    });
+    it("should take different values set as props", () => {
+      mount(
+        <UNSTABLE_SaltProviderNext
+          density="high"
+          mode="dark"
+          cornerRadius="rounded"
+        >
+          <TestComponent />
+          <UNSTABLE_SaltProviderNext density="medium" cornerRadius="none">
+            <TestComponent id="test-2" />
+          </UNSTABLE_SaltProviderNext>
+        </UNSTABLE_SaltProviderNext>
+      );
+
+      cy.get("#test-1")
+        .should("exist")
+        .and("have.attr", "data-density", "high")
+        .and("have.attr", "data-mode", "dark")
+        .and("have.attr", "data-corner", "rounded")
+        .and("have.attr", "data-announcer", "true");
+
+      cy.get("#test-2")
+        .should("exist")
+        .and("have.attr", "data-density", "medium")
+        .and("have.attr", "data-mode", "dark")
+        .and("have.attr", "data-corner", "none")
+        .and("have.attr", "data-announcer", "true");
     });
   });
 });
