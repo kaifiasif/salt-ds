@@ -1,9 +1,9 @@
 import {
-  ComponentProps,
   forwardRef,
   useRef,
   MouseEvent,
   FocusEvent,
+  ComponentPropsWithoutRef,
 } from "react";
 import { clsx } from "clsx";
 import { useToggleButtonGroup } from "../toggle-button-group";
@@ -13,7 +13,7 @@ import { makePrefixer, useControlled, useForkRef } from "../utils";
 
 import toggleButtonCss from "./ToggleButton.css";
 
-export interface ToggleButtonProps extends ComponentProps<"button"> {
+export interface ToggleButtonProps extends ComponentPropsWithoutRef<"button"> {
   selected?: boolean;
   onChange?: (event: MouseEvent<HTMLButtonElement>) => void;
   value: string | ReadonlyArray<string> | number | undefined;
@@ -78,10 +78,11 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
 
     return (
       <button
-        aria-checked={ariaChecked}
+        aria-pressed={!toggleButtonGroup ? ariaChecked : undefined}
+        aria-checked={toggleButtonGroup ? ariaChecked : undefined}
+        role={toggleButtonGroup ? "radio" : undefined}
         className={clsx(withBaseName(), className)}
         disabled={disabled}
-        role={toggleButtonGroup ? "radio" : "checkbox"}
         ref={handleRef}
         onClick={handleClick}
         onFocus={handleFocus}

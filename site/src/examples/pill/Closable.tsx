@@ -1,10 +1,13 @@
 import { ReactElement } from "react";
-import { PillNext } from "@salt-ds/lab";
+import { Pill } from "@salt-ds/core";
+import { CloseIcon } from "@salt-ds/icons";
 
 const handleClose = () => {
   console.log("closed");
 };
 
 export const Closable = (): ReactElement => (
-  <PillNext onClose={handleClose}>Closable Pill</PillNext>
+  <Pill onClick={handleClose}>
+    Closable Pill <CloseIcon />
+  </Pill>
 );

@@ -63,6 +63,7 @@ export interface RadioButtonProps
   onFocus?: FocusEventHandler<HTMLInputElement>;
   /**
    * Set the read only state.
+   * **Note**: Setting a standalone radio button as read-only is not accessible. The whole radio buttton group should be set as read-only instead.
    */
   readOnly?: boolean;
   /**
@@ -121,19 +122,19 @@ export const RadioButton = forwardRef<HTMLLabelElement, RadioButtonProps>(
       ...restInputProps
     } = inputProps;
 
-    const disabled = radioGroup.disabled ?? formFieldDisabled ?? disabledProp;
-    const readOnly = radioGroup.readOnly ?? formFieldReadOnly ?? readOnlyProp;
+    const disabled = radioGroup?.disabled || formFieldDisabled || disabledProp;
+    const readOnly = radioGroup?.readOnly || formFieldReadOnly || readOnlyProp;
     const validationStatus = !disabled
-      ? radioGroup.validationStatus ??
+      ? radioGroup?.validationStatus ??
         formFieldValidationStatus ??
         validationStatusProp
       : undefined;
 
     const radioGroupChecked =
-      radioGroup.value != null && value != null
+      radioGroup?.value != null && value != null
         ? radioGroup.value === value
         : checkedProp;
-    const name = nameProp ?? radioGroup.name;
+    const name = nameProp ?? radioGroup?.name;
 
     const [checked, setCheckedState] = useControlled({
       controlled: radioGroupChecked,
@@ -150,7 +151,7 @@ export const RadioButton = forwardRef<HTMLLabelElement, RadioButtonProps>(
 
       onChange?.(event);
       inputOnChange?.(event);
-      radioGroup.onChange?.(event);
+      radioGroup?.onChange?.(event);
     };
 
     return (
@@ -169,16 +170,22 @@ export const RadioButton = forwardRef<HTMLLabelElement, RadioButtonProps>(
         {...rest}
       >
         <input
-          aria-describedby={clsx(
-            radioGroup.a11yProps?.["aria-describedby"] ??
-              formFieldA11yProps?.["aria-describedby"],
-            inputDescribedBy
-          )}
-          aria-labelledby={clsx(
-            radioGroup.a11yProps?.["aria-labelledby"] ??
-              formFieldA11yProps?.["aria-labelledby"],
-            inputLabelledBy
-          )}
+          aria-describedby={
+            clsx(
+              radioGroup == undefined
+                ? formFieldA11yProps?.["aria-describedby"]
+                : undefined,
+              inputDescribedBy
+            ) || undefined
+          }
+          aria-labelledby={
+            clsx(
+              radioGroup == undefined
+                ? formFieldA11yProps?.["aria-labelledby"]
+                : undefined,
+              inputLabelledBy
+            ) || undefined
+          }
           className={clsx(withBaseName("input"), inputClassName)}
           checked={checked}
           disabled={disabled}

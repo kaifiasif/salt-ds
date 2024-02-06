@@ -1,5 +1,118 @@
 # @salt-ds/lab
 
+## 1.0.0-alpha.30
+
+### Patch Changes
+
+- b2b8dedb: Add vertical orientation for SteppedTracker
+
+## 1.0.0-alpha.29
+
+### Minor Changes
+
+- f8fec5ab: Update Overlay to use floating-ui. Supports placement on top (default), right, bottom, and left.
+
+  ```tsx
+  const OverlayTemplate = (props: OverlayProps) => {
+    const { style, ...rest } = props;
+    const id = "salt-overlay";
+
+    return (
+      <Overlay id={id} {...rest}>
+        <OverlayTrigger>
+          <Button>Show Overlay</Button>
+        </OverlayTrigger>
+        <OverlayPanel style={style}>
+          <h3 id={`${id}-header`}>Title</h3>
+          <div id={`${id}-content`}>Content of Overlay</div>
+        </OverlayPanel>
+      </Overlay>
+    );
+  };
+  ```
+
+- 8f0012b7: Removed `FileDropZone` from lab and promoted it to core.
+
+## 1.0.0-alpha.28
+
+### Minor Changes
+
+- 69549229: Removed `Scrim` from Lab and moved it to Core.
+- 907397e2: Removed NavigationItem from lab and promoted it to core
+- b2dd61d7: Removed Pagination from lab
+
+## 1.0.0-alpha.27
+
+### Minor Changes
+
+- ebe9feca: - Focus trap behavior is no longer managed by Scrim. Props related to this behavior such as `autoFocusRef`, `disableAutoFocus`, `disableFocusTrap`, `disableReturnFocus`, `fallbackFocusRef`, `returnFocusOptions` an `tabEnabledSelectors`, have been removed.
+  - Removed `onBackDropClick` prop. Use `onClick` instead.
+  - Removed `closeWithEscape` and `onClose` props. You can handle this outside of the scrim.
+  - Removed `enableContainerMode` and `containerRef` props and added `fixed` prop. The default behavior is now for the scrim to fill its container, and you can use the `fixed` prop to fill the viewport.
+  - Removed `zIndex` prop. You can change the `zIndex` using CSS.
+  - Removed `ScrimContext`.
+- 18576480: Refactor Combo Box Next and Dropdown Next to use compositional APIs.
+
+  ## Dropdown Next
+
+  ```tsx
+  <DropdownNext>
+    {colors.map((color) => (
+      <Option value={color} key={color}>
+        {color}
+      </Option>
+    ))}
+  </DropdownNext>
+  ```
+
+  ## Combo Box Next
+
+  ```tsx
+  <ComboBoxNext>
+    {colors.map((color) => (
+      <Option value={color} key={color}>
+        {color}
+      </Option>
+    ))}
+  </ComboBoxNext>
+  ```
+
+- 91d22148: Removed `pillNext` from Lab and promoted it to Core.
+
+### Patch Changes
+
+- d9ce0737: Replaced incorrect usage of nullish operators.
+- bbc4ccb1: Added TokenizedInputNext to lab.
+
+  Tokenized input provides an input field for text that’s converted into a pill within the field, or tokenized, when the user enters a delimiting character.
+
+  ```tsx
+  <TokenizedInputNext />
+  ```
+
+- e668b2d6: Navigation Item
+
+  - Updated the logic to make Navigation Item act like a button when `href` isn't passed.
+  - Fixed styles.
+
+## 1.0.0-alpha.26
+
+### Minor Changes
+
+- 641197da: - Removed `onClose` prop from `Pill`. Pill has been updated to support only one action. The `onClick`prop can be used instead.
+  - Remove `icon` prop from `Pill`. An icon can be added as a children instead.
+
+### Patch Changes
+
+- 70fad5a1: Updated @floating-ui/react to 0.26.5.
+- c49c246e: Removed redundant Icon color overrides.
+- 61072b78: Changes to Pagination:
+
+  - Removed `compact` prop from `Pagination` component. Replaced by new `CompactPaginator` composition component
+  - Removed `showPreviousNext` and `FormFieldProps` from `Paginator` component.
+  - Added `CompactPaginator` for the compact version of pagination.
+  - Removed `FormFieldProps` from `GoToInput` component and added `inputRef` and `inputVariant`
+
 ## 1.0.0-alpha.25
 
 ### Minor Changes
@@ -25,7 +138,7 @@
 
 ### Patch Changes
 
-- 2fd8c03c: Pill Next's `className` prop is now forwarded to its wrapper instead of the nested button.
+- 2fd8c03c: Pill's `className` prop is now forwarded to its wrapper instead of the nested button.
 
 ## 1.0.0-alpha.22
 
@@ -49,7 +162,7 @@ import "@salt-ds/lab/css/salt-lab.css";
 ### Patch Changes
 
 - 7023034a: Fix Combobox input's `onChange` and `onKeyDown` not being invoked.
-- 0ddc1e42: Removed default min width styling in `PillNext`. Smaller Pills should look cleaner.
+- 0ddc1e42: Removed default min width styling in `Pill`. Smaller Pills should look cleaner.
 - 9dbe7f4c: Fixed component text properties (`font-weight`, `font-family`, `font-size`, `line-height`) incorrectly inheriting external global styles, which should follow the text characteristic from the Salt theme.
 
   - Content Status
@@ -81,7 +194,7 @@ import "@salt-ds/lab/css/salt-lab.css";
     console.log("closed");
   };
 
-  <PillNext onClose={handleClose}>Closable Pill</PillNext>
+  <Pill onClose={handleClose}>Closable Pill</Pill>
   ```
 
 ### Patch Changes
@@ -378,17 +491,17 @@ import "@salt-ds/lab/css/salt-lab.css";
 
 ### Minor Changes
 
-- 05c77e70: Add PillNext
+- 05c77e70: Add Pill
 
   ```tsx
-  <PillNext onClick={handleClick}>
+  <Pill onClick={handleClick}>
       Pill
-  </PillNext>
+  </Pill>
 
 
-  <PillNext icon={<FavoriteIcon/>} onClick={handleClick}>
+  <Pill icon={<FavoriteIcon/>} onClick={handleClick}>
       Pill With Icon
-  </PillNext>
+  </Pill>
   ```
 
 ### Patch Changes

@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { PillNext } from "@salt-ds/lab";
+import { Pill } from "@salt-ds/core";
 import { FavoriteIcon } from "@salt-ds/icons";
 
 const handleClick = () => {
@@ -7,7 +7,7 @@ const handleClick = () => {
 };
 
 export const Icon = (): ReactElement => (
-  <PillNext icon={<FavoriteIcon />} onClick={handleClick}>
-    Pill with Icon
-  </PillNext>
+  <Pill onClick={handleClick}>
+    <FavoriteIcon /> Pill with Icon
+  </Pill>
 );

@@ -10,7 +10,7 @@ import {
 import HelpAndSupport from "docs/blocks/help-and-support.doc.mdx";
 
 <Meta
-  title="Documentation/Data Grid/Data Grid"
+  title="Documentation/Lab/Data Grid"
   component={Grid}
   parameters={{
     viewMode: "docs",
@@ -294,7 +294,7 @@ In most cases, it should be used together with the `RowValidationColumn` compone
 _Note: the paginator component is currently an experimental feature, works are in progress._
 
 ```
-import { Pagination, Paginator } from "@salt-ds/lab";
+import { Pagination, Paginator } from "@salt-ds/core";
 
 interface PaginationProps {
   count: number
@@ -307,7 +307,6 @@ interface PaginationProps {
 interface PaginatorProps {
   boundaryCount?: number;
   siblingCount?: number;
-  showPreviousNext?: boolean;
   FormFieldProps?: Partial<FormFieldProps>;
 }
 ```

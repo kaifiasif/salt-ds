@@ -7,18 +7,18 @@ import {
   createDummyInvestors,
 } from "./dummyData";
 import { useEffect, useState } from "react";
-import { Scrim, ContentStatus } from "@salt-ds/lab";
+import { ContentStatus } from "@salt-ds/lab";
 import {
   useQuery,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { useTheme } from "@salt-ds/core";
+import { Scrim, useTheme } from "@salt-ds/core";
 import { rest } from "msw";
 import "./grid.stories.css";
 
 export default {
-  title: "Data Grid/Data Grid",
+  title: "Lab/Data Grid",
   component: Grid,
   parameters: {
     msw: {
@@ -115,7 +115,6 @@ export function ServerSideSort() {
       <Scrim
         aria-label="Example Scrim"
         open={showFetching && !isFetchedAfterMount}
-        enableContainerMode
       >
         <ContentStatus status="loading" />
       </Scrim>

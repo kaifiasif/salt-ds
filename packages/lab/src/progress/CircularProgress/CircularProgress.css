@@ -4,13 +4,10 @@
   position: relative;
 }
 
-.saltCircularProgress-progressValue {
+.saltCircularProgress-progressLabel {
   align-items: center;
   color: var(--salt-content-primary-foreground);
   display: flex;
-  font-family: var(--salt-text-fontFamily);
-  font-size: var(--salt-text-label-fontSize);
-  font-weight: var(--salt-text-label-fontWeight-strong);
   height: 100%;
   justify-content: center;
   left: 0;
@@ -24,7 +21,7 @@
   border-style: var(--salt-track-borderStyle);
   border-width: var(--salt-size-bar-small);
   border-radius: calc(var(--salt-size-base) * 3);
-  border-color: var(--salt-palette-neutral-secondary-border);
+  border-color: var(--salt-track-borderColor);
 }
 
 .saltCircularProgress-bar {

@@ -1,6 +1,5 @@
-import { ComponentMeta, Story } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import React, {
-  ForwardedRef,
   forwardRef,
   useMemo,
   ComponentPropsWithoutRef,
@@ -22,7 +21,7 @@ import {
   FloatingComponentProvider,
   FloatingComponentProps,
 } from "@salt-ds/core";
-import { ComboBoxNext, DropdownNext } from "@salt-ds/lab";
+import { ComboBoxNext, DropdownNext, Option } from "@salt-ds/lab";
 import { useWindow } from "@salt-ds/window";
 import { useComponentCssInjection } from "@salt-ds/styles";
 
@@ -33,7 +32,7 @@ import { NewWindow, FloatingComponentWindow } from "./NewWindow";
 export default {
   title: "Core/Floating Platform",
   component: Tooltip,
-} as ComponentMeta<typeof Tooltip>;
+} as Meta<typeof Tooltip>;
 
 const defaultArgs: Omit<TooltipProps, "children"> = {
   content:
@@ -113,8 +112,8 @@ const NewWindowTest = (props: NewWindowTestProps) => {
 
   const FloatingUIComponent = useMemo(
     () =>
-      forwardRef(
-        (
+      forwardRef<HTMLDivElement, RootComponentProps>(
+        function FloatingUIComponent(
           {
             style,
             open,
@@ -122,11 +121,12 @@ const NewWindowTest = (props: NewWindowTestProps) => {
             left,
             width,
             height,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             position,
             ...rest
-          }: RootComponentProps,
-          ref: ForwardedRef<HTMLElement>
-        ) => {
+          },
+          ref
+        ) {
           const FloatingRoot = (
             /* In thise case to avoid Flash of Unstyled Text (FOUT) in the tooltip, due to being in an iframe, we are always rendering the tooltip.
              * We are visually hiding it until it is open to 'eagerly load' the font
@@ -162,6 +162,12 @@ const NewWindowTest = (props: NewWindowTestProps) => {
     [rootBody]
   );
 
+  const [value, setValue] = useState("");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
+
   return (
     <NewWindow ref={setIframe} style={{ height: 300 }}>
       <div style={{ padding: 10 }}>
@@ -180,8 +186,24 @@ const NewWindowTest = (props: NewWindowTestProps) => {
                   Click to show extra content
                 </Button>
               </Tooltip>
-              <ComboBoxNext disabled={false} source={source} />
-              <DropdownNext source={source} />
+              <ComboBoxNext disabled={false} onChange={handleChange}>
+                {source
+                  .filter((item) =>
+                    item.toLowerCase().includes(value.trim().toLowerCase())
+                  )
+                  .map((item) => (
+                    <Option key={item} value={item}>
+                      {item}
+                    </Option>
+                  ))}
+              </ComboBoxNext>
+              <DropdownNext>
+                {source.map((item) => (
+                  <Option key={item} value={item}>
+                    {item}
+                  </Option>
+                ))}
+              </DropdownNext>
             </FloatingComponentProvider>
           </FloatingPlatformProvider>
         </StackLayout>
@@ -190,9 +212,7 @@ const NewWindowTest = (props: NewWindowTestProps) => {
   );
 };
 
-export const CustomFloatingUiPlatform: Story<TooltipProps> = (
-  props: TooltipProps
-) => {
+export const CustomFloatingUiPlatform: StoryFn<typeof Tooltip> = (args) => {
   return (
     <NewWindow style={{ width: "600px", height: "550px", border: "none" }}>
       <StackLayout gap={2}>
@@ -201,7 +221,7 @@ export const CustomFloatingUiPlatform: Story<TooltipProps> = (
           It represents a global coordinate space (e.g. a users screen)
         </Text>
         <StackLayout gap={10} direction="row">
-          <NewWindowTest {...props} />
+          <NewWindowTest {...args} />
         </StackLayout>
       </StackLayout>
     </NewWindow>
@@ -209,7 +229,7 @@ export const CustomFloatingUiPlatform: Story<TooltipProps> = (
 };
 CustomFloatingUiPlatform.args = defaultArgs;
 
-export const AnimationFrame: Story<TooltipProps> = (props: TooltipProps) => {
+export const AnimationFrame: StoryFn = () => {
   const targetWindow = useWindow();
   useComponentCssInjection({ css: floatingCss, window: targetWindow });
 
@@ -224,17 +244,28 @@ export const AnimationFrame: Story<TooltipProps> = (props: TooltipProps) => {
             <Button>I am a moving button</Button>
           </Tooltip>
           <div style={{ width: 200, position: "relative" }}>
-            <ComboBoxNext disabled={false} source={source} />
-            <DropdownNext source={source} />
+            <ComboBoxNext disabled={false}>
+              {source.map((item) => (
+                <Option key={item} value={item}>
+                  {item}
+                </Option>
+              ))}
+            </ComboBoxNext>
+            <DropdownNext>
+              {source.map((item) => (
+                <Option key={item} value={item}>
+                  {item}
+                </Option>
+              ))}
+            </DropdownNext>
           </div>
         </StackLayout>
       </FloatingPlatformProvider>
     </div>
   );
 };
-CustomFloatingUiPlatform.args = defaultArgs;
 
-export const CustomMiddleware: Story<TooltipProps> = (props: TooltipProps) => {
+export const CustomMiddleware: StoryFn = () => {
   const targetWindow = useWindow();
   useComponentCssInjection({ css: floatingCss, window: targetWindow });
 
@@ -244,8 +275,20 @@ export const CustomMiddleware: Story<TooltipProps> = (props: TooltipProps) => {
     >
       <StackLayout align="start" direction={"column"}>
         <div style={{ width: 200, position: "relative" }}>
-          <ComboBoxNext disabled={false} source={source} />
-          <DropdownNext source={source} />
+          <ComboBoxNext disabled={false}>
+            {source.map((item) => (
+              <Option key={item} value={item}>
+                {item}
+              </Option>
+            ))}
+          </ComboBoxNext>
+          <DropdownNext>
+            {source.map((item) => (
+              <Option key={item} value={item}>
+                {item}
+              </Option>
+            ))}
+          </DropdownNext>
         </div>
         <Tooltip content="I am offset due to custom middleware" open>
           <Button>I am a button</Button>
@@ -254,4 +297,3 @@ export const CustomMiddleware: Story<TooltipProps> = (props: TooltipProps) => {
     </FloatingPlatformProvider>
   );
 };
-CustomFloatingUiPlatform.args = defaultArgs;

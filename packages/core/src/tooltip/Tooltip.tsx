@@ -89,7 +89,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       validationStatus: formFieldValidationStatus,
     } = useFormFieldProps();
 
-    const disabled = formFieldDisabled ?? disabledProp;
+    const disabled = disabledProp || formFieldDisabled;
     const status =
       formFieldValidationStatus !== undefined &&
       VALIDATION_NAMED_STATUS.includes(formFieldValidationStatus)
@@ -116,12 +116,13 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     } = useTooltip(hookProps);
 
     const triggerRef = useForkRef(
-      // @ts-ignore
+      // @ts-expect-error children.ref cannot currently be typed.
       isValidElement(children) ? children.ref : null,
       reference
     );
 
-    const floatingRef = useForkRef(floating, ref);
+    const floatingRef = useForkRef<HTMLDivElement>(floating, ref);
+    const hasContent = !!content;
 
     return (
       <>
@@ -133,9 +134,9 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
         <FloatingComponent
           className={clsx(withBaseName(), withBaseName(status), className)}
-          open={open && !disabled}
-          ref={floatingRef}
+          open={open && !disabled && hasContent}
           {...getTooltipProps()}
+          ref={floatingRef}
           {...getTooltipPosition()}
         >
           <TooltipBase

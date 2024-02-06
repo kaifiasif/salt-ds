@@ -5,10 +5,15 @@ import {
   forwardRef,
   InputHTMLAttributes,
   ReactNode,
+  useRef,
 } from "react";
 import { useComponentCssInjection } from "@salt-ds/styles";
 import { useWindow } from "@salt-ds/window";
-import { makePrefixer, useControlled } from "../utils";
+import {
+  makePrefixer,
+  useControlled,
+  useIsomorphicLayoutEffect,
+} from "../utils";
 import { CheckboxIcon } from "./CheckboxIcon";
 import { useFormFieldProps } from "../form-field-context";
 import { AdornmentValidationStatus } from "../status-adornment";
@@ -41,9 +46,7 @@ export interface CheckboxProps
    */
   error?: boolean;
   /**
-   * If true, the checkbox appears indeterminate. This does not set the native
-   * input element to indeterminate due to the inconsistent behaviour across browsers
-   * However, a data-indeterminate attribute is set on the input.
+   * If true, the checkbox appears indeterminate. A data-indeterminate attribute is set on the input.
    */
   indeterminate?: boolean;
   /**
@@ -122,8 +125,8 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(
     } = inputProps;
 
     const checkboxGroupChecked =
-      checkedProp == null && value != null
-        ? checkboxGroup.checkedValues?.includes(value)
+      checkboxGroup?.checkedValues != null && value != null
+        ? checkboxGroup.checkedValues.includes(value)
         : checkedProp;
 
     const [checked, setChecked] = useControlled({
@@ -141,14 +144,16 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(
     } = useFormFieldProps();
 
     const disabled =
-      checkboxGroup.disabled ?? formFieldDisabled ?? disabledProp;
+      checkboxGroup?.disabled || formFieldDisabled || disabledProp;
     const readOnly =
-      checkboxGroup.readOnly ?? formFieldReadOnly ?? readOnlyProp;
+      checkboxGroup?.readOnly || formFieldReadOnly || readOnlyProp;
     const validationStatus = !disabled
-      ? checkboxGroup.validationStatus ??
+      ? checkboxGroup?.validationStatus ??
         formFieldValidationStatus ??
         validationStatusProp
       : undefined;
+
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
       // Workaround for https://github.com/facebook/react/issues/9023
@@ -160,8 +165,14 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(
       setChecked(value);
       onChange?.(event);
       inputOnChange?.(event);
-      checkboxGroup.onChange?.(event);
+      checkboxGroup?.onChange?.(event);
     };
+
+    useIsomorphicLayoutEffect(() => {
+      if (inputRef.current != null) {
+        inputRef.current.indeterminate = indeterminate ?? false;
+      }
+    }, [indeterminate]);
 
     return (
       <label
@@ -179,16 +190,17 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(
         {...rest}
       >
         <input
-          // aria-checked only needed when indeterminate since native indeterminate behaviour is not used
-          aria-checked={indeterminate ? "mixed" : undefined}
+          aria-readonly={readOnly || undefined}
           aria-describedby={clsx(
-            checkboxGroup.a11yProps?.["aria-describedby"] ??
-              formFieldA11yProps?.["aria-describedby"],
+            checkboxGroup === undefined
+              ? formFieldA11yProps?.["aria-describedby"]
+              : undefined,
             inputDescribedBy
           )}
           aria-labelledby={clsx(
-            checkboxGroup.a11yProps?.["aria-labelledby"] ??
-              formFieldA11yProps?.["aria-labelledby"],
+            checkboxGroup === undefined
+              ? formFieldA11yProps?.["aria-labelledby"]
+              : undefined,
             inputLabelledBy
           )}
           name={name}
@@ -203,6 +215,7 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(
           onChange={handleChange}
           onFocus={onFocus}
           type="checkbox"
+          ref={inputRef}
           {...restInputProps}
         />
         <CheckboxIcon
