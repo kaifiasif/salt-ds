@@ -1,0 +1,6 @@
+.salt-theme-next[data-corner="none"] {
+  --salt-container-borderRadius: var(--salt-corner-none);
+}
+.salt-theme-next[data-corner="rounded"] {
+  --salt-container-borderRadius: var(--salt-corner-medium);
+}

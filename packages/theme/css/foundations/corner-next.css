@@ -1,5 +1,6 @@
 .salt-theme-next {
   --salt-corner-none: 0;
-  --salt-corner-small: 3px;
-  --salt-corner-large: 6px;
+  --salt-corner-small: 4px;
+  --salt-corner-medium: 8px;
+  --salt-corner-large: 9999px;
 }
